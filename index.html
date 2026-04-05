@@ -603,7 +603,9 @@ footer {
     <h2>Cuéntanos cuánto tiempo<br><em>estás perdiendo.</em></h2>
     <p class="contacto-lead">Una conversación de 20 minutos es suficiente para saber si podemos ayudarte. Gratis, sin compromiso, sin tecnicismos.</p>
 
-    <form onsubmit="handleSubmit(event)">
+    <form id="yovel-form" action="https://formspree.io/f/mwvwavew" method="POST">
+      <input type="hidden" name="_subject" value="Nuevo prospecto Yovel 🌿">
+      <input type="hidden" name="_language" value="es">
       <div class="form-grid">
         <div class="form-group">
           <label for="nombre">Tu nombre</label>
@@ -645,7 +647,7 @@ footer {
           <textarea id="mensaje" name="mensaje" placeholder="Cuéntanos un poco más sobre tu negocio o situación..."></textarea>
         </div>
         <div class="form-full">
-          <button type="submit" class="btn-form">Enviar — me contactarán en menos de 24 horas</button>
+          <button type="submit" class="btn-form" id="submit-btn">Enviar — te contactaré en menos de 24 horas</button>
         </div>
       </div>
     </form>
@@ -677,38 +679,39 @@ footer {
 </footer>
 
 <script>
-function handleSubmit(e) {
+// Formspree AJAX submission — muestra mensaje de éxito sin recargar
+const form = document.getElementById('yovel-form');
+form.addEventListener('submit', async function(e) {
   e.preventDefault();
-  const form = e.target;
-  const data = new FormData(form);
-  const nombre = data.get('nombre');
-  const empresa = data.get('empresa');
-  const proceso = data.get('proceso');
-  const horas = data.get('horas');
-  const contactoPref = data.get('contacto-pref');
-  const tel = data.get('tel');
-  const mensaje = data.get('mensaje');
+  const btn = document.getElementById('submit-btn');
+  btn.textContent = 'Enviando...';
+  btn.disabled = true;
 
-  // Build WhatsApp message
-  const msg = `Hola Sebastián! Me llegaste desde tu web Yovel.\n\n*Nombre:* ${nombre}\n*Empresa:* ${empresa}\n*Proceso que más tiempo consume:* ${proceso}\n*Horas semanales:* ${horas}\n*Contacto preferido:* ${contactoPref}\n*Datos de contacto:* ${tel}${mensaje ? `\n*Mensaje:* ${mensaje}` : ''}`;
-  const waUrl = `https://wa.me/573143785423?text=${encodeURIComponent(msg)}`;
+  try {
+    const response = await fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' }
+    });
 
-  // Show success
-  form.style.display = 'none';
-  document.getElementById('form-success').style.display = 'block';
+    if (response.ok) {
+      form.style.display = 'none';
+      document.getElementById('form-success').style.display = 'block';
+      document.getElementById('form-success').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      btn.textContent = 'Error — intenta de nuevo';
+      btn.disabled = false;
+    }
+  } catch {
+    btn.textContent = 'Error de conexión — intenta de nuevo';
+    btn.disabled = false;
+  }
+});
 
-  // Open WhatsApp after short delay
-  setTimeout(() => { window.open(waUrl, '_blank'); }, 800);
-}
-
-// Smooth nav highlight on scroll
+// Nav shadow on scroll
 window.addEventListener('scroll', () => {
   const nav = document.querySelector('nav');
-  if (window.scrollY > 60) {
-    nav.style.boxShadow = '0 1px 20px rgba(0,0,0,0.15)';
-  } else {
-    nav.style.boxShadow = 'none';
-  }
+  nav.style.boxShadow = window.scrollY > 60 ? '0 1px 20px rgba(0,0,0,0.15)' : 'none';
 });
 </script>
 </body>
