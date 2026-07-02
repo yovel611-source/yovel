@@ -379,8 +379,8 @@ body{background:var(--bg-body);color:var(--text-primary);font-family:var(--sans)
 
    Necesitas dos valores de tu proyecto Supabase:
 
-   ▸ SUPABASE_URL: Está en el panel principal del proyecto en sbClient.
-     Debe ser algo como: https://XXXXXXXXXXXXXXX.sbClient.co
+   ▸ SUPABASE_URL: Está en el panel principal del proyecto en Supabase.
+     Debe ser algo como: https://XXXXXXXXXXXXXXX.supabase.co
 
    ▸ SUPABASE_KEY: Está en Settings → API Keys → Publishable key.
      Debe empezar con: sb_publishable_
@@ -389,7 +389,7 @@ body{background:var(--bg-body);color:var(--text-primary);font-family:var(--sans)
    NO borres las comillas.
    ═══════════════════════════════════════════════════════════════════════════ */
 
-const SUPABASE_URL = 'https://lldgufmpwozybeskbepl.supabase.co';';
+const SUPABASE_URL = 'https://lldgufmpwozybeskbepl.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_FtztspYzQ2M1GbLKMSrZIg_kQqZExJS';
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -524,7 +524,7 @@ async function cerrarSesion(){
 
 async function cargarDashboard(user){
   try {
-    const { data: perfil, error: errPerfil } = await supabase
+    const { data: perfil, error: errPerfil } = await sbClient
       .from('perfiles')
       .select('nombre, email, tipo')
       .eq('id', user.id)
@@ -538,7 +538,7 @@ async function cargarDashboard(user){
       return;
     }
 
-    const { data: archivos } = await supabase
+    const { data: archivos } = await sbClient
       .from('archivos')
       .select('nombre, url, tipo, descripcion, orden, created_at')
       .order('orden', { ascending: true });
