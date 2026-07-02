@@ -379,8 +379,8 @@ body{background:var(--bg-body);color:var(--text-primary);font-family:var(--sans)
 
    Necesitas dos valores de tu proyecto Supabase:
 
-   ▸ SUPABASE_URL: Está en el panel principal del proyecto en Supabase.
-     Debe ser algo como: https://XXXXXXXXXXXXXXX.supabase.co
+   ▸ SUPABASE_URL: Está en el panel principal del proyecto en sbClient.
+     Debe ser algo como: https://XXXXXXXXXXXXXXX.sbClient.co
 
    ▸ SUPABASE_KEY: Está en Settings → API Keys → Publishable key.
      Debe empezar con: sb_publishable_
@@ -389,7 +389,7 @@ body{background:var(--bg-body);color:var(--text-primary);font-family:var(--sans)
    NO borres las comillas.
    ═══════════════════════════════════════════════════════════════════════════ */
 
-const SUPABASE_URL = 'https://lldgufmpwozybeskbepl.supabase.co';
+const SUPABASE_URL = 'https://lldgufmpwozybeskbepl.sbClient.co';
 const SUPABASE_KEY = 'sb_publishable_FtztspYzQ2M1GbLKMSrZIg_kQqZExJS';
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -397,7 +397,7 @@ const SUPABASE_KEY = 'sb_publishable_FtztspYzQ2M1GbLKMSrZIg_kQqZExJS';
    ═══════════════════════════════════════════════════════════════════════════ */
 
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const sbClient = window.sbClient.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 function initTheme(){
   const saved = localStorage.getItem('yovel-theme');
@@ -475,7 +475,7 @@ function ocultarError(){
 
 async function chequearSesion(){
   try {
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await sbClient.auth.getSession();
     if(session) await cargarDashboard(session.user);
     else mostrarLogin();
   } catch(e){
@@ -492,7 +492,7 @@ async function hacerLogin(email, password){
   ocultarError();
 
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await sbClient.auth.signInWithPassword({ email, password });
     if(error){
       let msg = 'No pudimos iniciar tu sesión. Verifica tus datos e intenta de nuevo.';
       if(error.message.includes('Invalid login credentials')) msg = 'Correo o contraseña incorrectos. Revísalos e intenta de nuevo.';
@@ -513,7 +513,7 @@ async function hacerLogin(email, password){
 }
 
 async function cerrarSesion(){
-  try { await supabase.auth.signOut(); } catch(e){ console.error(e); }
+  try { await sbClient.auth.signOut(); } catch(e){ console.error(e); }
   document.getElementById('email').value = '';
   document.getElementById('password').value = '';
   document.getElementById('loginBtn').disabled = false;
@@ -533,7 +533,7 @@ async function cargarDashboard(user){
     if(errPerfil || !perfil){
       console.error('Error cargando perfil:', errPerfil);
       mostrarError('No pudimos cargar tu perfil. Contacta a Sebastián.');
-      await supabase.auth.signOut();
+      await sbClient.auth.signOut();
       mostrarLogin();
       return;
     }
@@ -673,7 +673,7 @@ function init(){
 
   chequearSesion();
 
-  supabase.auth.onAuthStateChange((event) => {
+  sbClient.auth.onAuthStateChange((event) => {
     if(event === 'SIGNED_OUT') mostrarLogin();
   });
 }
