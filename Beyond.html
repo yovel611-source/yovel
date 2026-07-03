@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beyond · Panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --verde:#0F6E56; --verde-oscuro:#085041; --verde-suave:#3E9179;
+  --dorado:#C8A45A; --dorado-oscuro:#9F7E3F; --dorado-claro:#D9BC7E;
+  --crema:#FAEEDA; --crema-soft:#FDF8ED; --crema-deep:#F3E2BE;
+  --tinta:#1A1A18; --tinta-soft:#3D3935;
+  --muted:#8C857A; --line:#E4D9BE; --line-soft:#EFE6CE;
+  --paper:#FFFFFF; --red:#A32D2D;
+  --serif:'EB Garamond',Georgia,serif;
+  --sans:'Outfit',-apple-system,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--crema);color:var(--tinta);font-family:var(--sans);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body{min-height:100vh;padding:0}
+.shell{max-width:1180px;margin:0 auto;padding:38px 30px 100px}
+
+/* HEADER */
+.head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid var(--tinta);padding-bottom:20px;margin-bottom:32px;flex-wrap:wrap;gap:14px}
+.head-l .eyebrow{font-size:11px;letter-spacing:0.24em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.head-l .biz{font-family:var(--serif);font-size:44px;font-weight:600;line-height:1;letter-spacing:0.02em}
+.head-l .tag{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--muted);margin-top:8px;letter-spacing:0.005em}
+.head-r{text-align:right}
+.head-r .date{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted)}
+.head-r .today{font-family:var(--serif);font-size:18px;margin-top:4px;color:var(--tinta);font-style:italic}
+.head-r .ver{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-top:8px}
+
+/* NAV */
+.nav{display:flex;gap:32px;border-bottom:1px solid var(--line);margin-bottom:36px;overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav button{background:transparent;border:none;font-family:var(--sans);font-size:13px;letter-spacing:0.04em;color:var(--muted);cursor:pointer;padding:14px 0;position:relative;white-space:nowrap;font-weight:400}
+.nav button.on{color:var(--tinta);font-weight:500}
+.nav button.on::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:var(--verde)}
+.nav button:hover{color:var(--tinta-soft)}
+
+/* SECTION */
+.section-eyebrow{font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.section-title{font-family:var(--serif);font-size:24px;font-weight:400;color:var(--tinta);margin-bottom:24px;letter-spacing:-0.005em}
+.section-title em{font-style:italic;color:var(--verde-oscuro)}
+
+/* KPI GRID */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-bottom:32px}
+.kpi{background:var(--crema-soft);padding:22px 20px}
+.kpi-label{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.kpi-value{font-family:var(--serif);font-size:28px;font-weight:400;color:var(--tinta);line-height:1;letter-spacing:-0.01em}
+.kpi-value.green{color:var(--verde-oscuro)}
+.kpi-value.gold{color:var(--dorado-oscuro)}
+.kpi-value.small{font-size:18px}
+.kpi-sub{font-size:12px;color:var(--muted);margin-top:8px;font-family:var(--serif);font-style:italic}
+
+/* CARD */
+.card{background:var(--paper);border:1px solid var(--line);padding:24px;margin-bottom:20px}
+.card-title{font-family:var(--serif);font-size:19px;font-weight:400;margin-bottom:18px;letter-spacing:-0.005em;display:flex;justify-content:space-between;align-items:baseline}
+.card-title em{font-style:italic;color:var(--verde-oscuro)}
+.card-title .meta{font-family:var(--serif);font-style:italic;color:var(--muted);font-size:13px}
+
+.two-col{display:grid;grid-template-columns:1.4fr 1fr;gap:20px;margin-bottom:20px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-bottom:20px}
+
+/* RANKED */
+.ranked{display:flex;flex-direction:column}
+.rank-row{display:flex;align-items:baseline;gap:14px;padding:12px 0;border-bottom:1px solid var(--line-soft)}
+.rank-row:last-child{border-bottom:none}
+.rank-num{font-family:var(--serif);font-size:15px;color:var(--dorado-oscuro);font-weight:700;min-width:22px;font-style:italic}
+.rank-name{flex:1;font-size:14px;color:var(--tinta);font-weight:500}
+.rank-name em{font-style:italic;font-weight:400;color:var(--muted);font-size:12px;margin-left:6px}
+.rank-bar{flex:0 0 60px;height:3px;background:var(--crema);position:relative;border-radius:1px}
+.rank-bar-fill{position:absolute;left:0;top:0;bottom:0;background:var(--verde);border-radius:1px}
+.rank-stat{font-family:var(--serif);font-size:14px;color:var(--tinta);min-width:100px;text-align:right;font-variant-numeric:tabular-nums}
+.rank-sub{font-size:11px;color:var(--muted);margin-top:2px;font-style:italic;font-family:var(--serif)}
+
+/* MIX BAR */
+.mix{display:flex;height:36px;overflow:hidden;background:var(--crema);border:1px solid var(--line);margin-bottom:14px}
+.mix-camisa{background:var(--verde-oscuro);color:var(--crema);display:flex;align-items:center;padding:0 14px;font-size:12px;letter-spacing:0.08em;font-weight:500}
+.mix-tote{background:var(--dorado);color:var(--tinta);display:flex;align-items:center;padding:0 14px;font-size:12px;letter-spacing:0.08em;font-weight:500}
+.mix-legend{display:flex;justify-content:space-between;font-family:var(--serif);font-style:italic;font-size:12px;color:var(--muted);margin-top:6px}
+
+/* TIMELINE / VENTAS */
+.timeline{display:flex;flex-direction:column}
+.time-row{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--line-soft)}
+.time-row:last-child{border-bottom:none}
+.time-date{font-family:var(--serif);font-size:13px;color:var(--muted);min-width:80px;font-variant-numeric:tabular-nums}
+.time-prod{flex:1;font-size:14px;color:var(--tinta);min-width:0}
+.time-prod .qty{color:var(--muted);font-size:12px;margin-right:6px}
+.time-prod .diseno-name{font-weight:500}
+.time-prod .diseno-meta{font-family:var(--serif);font-style:italic;font-size:12px;color:var(--muted);margin-top:2px}
+.time-amt{font-family:var(--serif);font-size:15px;color:var(--tinta);font-variant-numeric:tabular-nums;font-weight:700;text-align:right}
+.time-plat{font-family:var(--sans);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-top:2px;text-align:right}
+.time-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:2px 6px;opacity:0.3}
+.time-del:hover{opacity:1;color:var(--red)}
+
+/* FORM */
+input,select,textarea{font-family:var(--sans);font-size:14px;color:var(--tinta);background:var(--paper);border:1px solid var(--line);padding:10px 12px;outline:none;border-radius:0;flex:1;min-width:100px}
+input:focus,select:focus,textarea:focus{border-color:var(--tinta)}
+input[type=date]{min-width:140px;font-variant-numeric:tabular-nums}
+input[type=number]{font-variant-numeric:tabular-nums;text-align:right}
+label{font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px}
+.btn{font-family:var(--sans);font-size:13px;font-weight:500;letter-spacing:0.02em;padding:10px 22px;cursor:pointer;border:1px solid var(--tinta);background:var(--tinta);color:var(--crema);transition:opacity 0.15s;white-space:nowrap}
+.btn:hover{opacity:0.85}
+.btn-soft{background:transparent;color:var(--tinta);border-color:var(--line)}
+.btn-soft:hover{border-color:var(--tinta);opacity:1}
+.btn-sm{padding:6px 12px;font-size:12px}
+
+/* QUICK ADD */
+.quick{background:var(--tinta);color:var(--crema);padding:24px;margin-bottom:24px}
+.quick-eyebrow{font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--dorado-claro);margin-bottom:6px}
+.quick-title{font-family:var(--serif);font-size:20px;margin-bottom:18px;font-weight:400}
+.quick-title em{font-style:italic;color:var(--dorado-claro)}
+.quick-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:12px}
+.quick-grid .full{grid-column:span 2}
+.quick input,.quick select{background:rgba(255,255,255,0.05);border-color:rgba(250,238,218,0.2);color:var(--crema);font-size:13px}
+.quick input::placeholder{color:rgba(250,238,218,0.4)}
+.quick input:focus,.quick select:focus{border-color:var(--dorado)}
+.quick option{background:var(--tinta);color:var(--crema)}
+.quick-actions{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.quick-total{font-family:var(--serif);font-size:22px;color:var(--dorado-claro);font-variant-numeric:tabular-nums}
+.quick-total em{font-style:italic;color:var(--dorado);font-size:14px;margin-right:8px}
+.quick .btn{background:var(--dorado);color:var(--tinta);border-color:var(--dorado)}
+.quick .btn:hover{background:var(--dorado-claro)}
+
+.feedback{font-size:12px;color:var(--verde-oscuro);font-style:italic;font-family:var(--serif);min-height:18px;margin-top:8px}
+
+/* DISEÑOS CATALOG */
+.coleccion-block{margin-bottom:38px}
+.col-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.col-name{font-family:var(--serif);font-size:22px;font-weight:500;color:var(--tinta)}
+.col-name em{font-style:italic;color:var(--dorado-oscuro);font-size:13px;margin-left:10px;font-weight:400}
+.col-concepto{font-family:var(--serif);font-style:italic;font-size:13px;color:var(--muted);max-width:400px;text-align:right}
+.col-status{display:inline-block;font-size:10px;padding:2px 10px;border-radius:20px;letter-spacing:0.08em;font-weight:500;margin-left:10px}
+.col-status.activa{background:#E1EBE5;color:var(--verde-oscuro)}
+.col-status.archivada{background:transparent;color:var(--muted);border:1px solid var(--line)}
+
+.disenos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.diseno-card{background:var(--paper);border:1px solid var(--line);padding:18px 20px;transition:border-color 0.15s}
+.diseno-card:hover{border-color:var(--dorado)}
+.diseno-nombre{font-family:var(--serif);font-size:17px;font-weight:500;color:var(--tinta);margin-bottom:4px;line-height:1.2}
+.diseno-tipo{font-family:var(--serif);font-style:italic;font-size:12px;color:var(--muted);margin-bottom:12px}
+.diseno-stats{display:flex;justify-content:space-between;align-items:baseline;padding-top:12px;border-top:1px dashed var(--line)}
+.diseno-precio{font-family:var(--serif);font-size:15px;color:var(--dorado-oscuro);font-variant-numeric:tabular-nums;font-weight:500}
+.diseno-vendidos{font-family:var(--serif);font-style:italic;font-size:12px;color:var(--muted)}
+.diseno-vendidos strong{font-style:normal;font-weight:500;color:var(--tinta);font-size:13px}
+
+/* INSUMOS TABLE */
+.table{width:100%;border-collapse:collapse;font-size:14px}
+.table th{text-align:left;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);font-weight:500;padding:10px 12px 10px 0;border-bottom:1px solid var(--tinta)}
+.table th.right{text-align:right;padding-right:0}
+.table td{padding:12px 12px 12px 0;border-bottom:1px solid var(--line-soft);vertical-align:middle}
+.table td.right{text-align:right;padding-right:0;font-variant-numeric:tabular-nums}
+.table tr:last-child td{border-bottom:none}
+.table .ins-name{font-weight:500}
+.table .ins-meta{font-size:11px;color:var(--muted);font-style:italic;font-family:var(--serif);margin-top:2px}
+.stock-bar{width:70px;height:3px;background:var(--crema);position:relative;display:inline-block;margin-left:8px;vertical-align:middle}
+.stock-bar-fill{position:absolute;left:0;top:0;bottom:0}
+.tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:2px;font-weight:500;letter-spacing:0.05em}
+.tag-ok{background:#E1EBE5;color:var(--verde-oscuro)}
+.tag-low{background:#FAEEDA;color:var(--dorado-oscuro)}
+.tag-out{background:#F5E1E1;color:var(--red)}
+
+/* EMPTY */
+.empty{text-align:center;padding:40px 20px;color:var(--muted);font-family:var(--serif);font-style:italic;font-size:15px}
+.empty-action{margin-top:14px;color:var(--tinta);font-style:normal;font-family:var(--sans);font-size:12px;letter-spacing:0.1em;text-transform:uppercase}
+
+/* FILTERS */
+.filters{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.filters select{font-family:var(--sans);font-size:13px;padding:8px 10px;border:1px solid var(--line);background:var(--paper);color:var(--tinta);outline:none;flex:1;min-width:120px}
+
+/* FOOTER */
+.foot{text-align:center;margin-top:60px;padding-top:24px;border-top:1px solid var(--line);font-size:11px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase}
+.foot strong{font-family:var(--serif);font-style:italic;font-weight:400;text-transform:none;letter-spacing:0;color:var(--tinta-soft);font-size:13px;display:block;margin-bottom:4px}
+
+/* MODAL for new diseño */
+.modal-bg{position:fixed;inset:0;background:rgba(10,10,9,0.6);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
+.modal-bg.on{display:flex}
+.modal{background:var(--paper);max-width:480px;width:100%;padding:32px 30px}
+.modal h3{font-family:var(--serif);font-size:22px;font-weight:500;margin-bottom:18px}
+.modal .field{margin-bottom:14px}
+.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
+
+/* COTIZADOR */
+.cot-layout{display:grid;grid-template-columns:1.3fr 1fr;gap:24px;margin-bottom:24px}
+.cot-form{background:var(--paper);border:1px solid var(--line);padding:26px}
+.cot-form h3{font-family:var(--serif);font-size:19px;font-weight:400;margin-bottom:18px;letter-spacing:-0.005em}
+.cot-form h3 em{font-style:italic;color:var(--verde-oscuro)}
+.cot-group{margin-bottom:22px;padding-bottom:22px;border-bottom:1px solid var(--line-soft)}
+.cot-group:last-of-type{border-bottom:none;padding-bottom:0;margin-bottom:0}
+.cot-group-title{font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--dorado-oscuro);margin-bottom:14px;font-weight:500}
+.cot-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.cot-row:last-child{margin-bottom:0}
+.cot-row.three{grid-template-columns:1fr 1fr 1fr}
+.cot-row.full{grid-template-columns:1fr}
+.cot-line-item{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:8px;margin-bottom:8px;align-items:center}
+.cot-line-item input{padding:8px 10px;font-size:13px}
+.cot-line-add{background:transparent;border:1px dashed var(--line);color:var(--muted);padding:8px 14px;cursor:pointer;font-family:var(--sans);font-size:12px;letter-spacing:0.08em;width:100%;margin-top:6px;transition:all 0.15s}
+.cot-line-add:hover{border-color:var(--verde-oscuro);color:var(--verde-oscuro)}
+.cot-line-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:4px 8px;opacity:0.5}
+.cot-line-del:hover{opacity:1;color:var(--red)}
+
+.cot-summary{background:var(--tinta);color:var(--crema);padding:26px;position:sticky;top:20px;align-self:start}
+.cot-summary h3{font-family:var(--serif);font-size:19px;font-weight:400;margin-bottom:6px;letter-spacing:-0.005em}
+.cot-summary h3 em{font-style:italic;color:var(--dorado-claro)}
+.cot-summary-cliente{font-family:var(--serif);font-style:italic;color:var(--dorado-claro);font-size:13px;margin-bottom:24px}
+.cot-line{display:flex;justify-content:space-between;align-items:baseline;padding:10px 0;border-bottom:1px solid rgba(250,238,218,0.1);font-size:14px}
+.cot-line-label{font-family:var(--serif);font-style:italic;color:var(--crema);opacity:0.85}
+.cot-line-val{font-family:var(--serif);color:var(--crema);font-variant-numeric:tabular-nums;font-weight:500}
+.cot-line.emph{padding:14px 0;border-top:1px solid rgba(200,164,90,0.4);border-bottom:1px solid rgba(200,164,90,0.4);margin:8px 0}
+.cot-line.emph .cot-line-val{font-size:16px;color:var(--dorado-claro)}
+.cot-final{margin-top:18px;padding:20px 0 8px;border-top:2px solid var(--dorado);text-align:center}
+.cot-final-label{font-size:10px;letter-spacing:0.28em;text-transform:uppercase;color:var(--dorado-claro);margin-bottom:8px}
+.cot-final-value{font-family:var(--serif);font-size:34px;font-weight:500;color:var(--crema);letter-spacing:-0.01em;line-height:1}
+.cot-anticipo{margin-top:14px;font-family:var(--serif);font-style:italic;color:var(--dorado-claro);font-size:13.5px}
+.cot-anticipo strong{font-style:normal;font-weight:500;font-family:var(--sans);letter-spacing:0}
+.cot-summary-actions{margin-top:22px;display:flex;flex-direction:column;gap:10px}
+.cot-summary .btn{background:var(--dorado);color:var(--tinta);border-color:var(--dorado);width:100%}
+.cot-summary .btn:hover{background:var(--dorado-claro)}
+.cot-summary .btn-soft{background:transparent;color:var(--crema);border-color:rgba(250,238,218,0.3)}
+.cot-summary .btn-soft:hover{border-color:var(--crema);opacity:1}
+
+/* HISTORIAL COTIZACIONES */
+.cot-hist-row{display:grid;grid-template-columns:80px 1fr 120px auto auto;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line-soft)}
+.cot-hist-row:last-child{border-bottom:none}
+.cot-hist-date{font-family:var(--serif);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.cot-hist-name{font-size:14px;color:var(--tinta);font-weight:500}
+.cot-hist-name .sub{font-family:var(--serif);font-style:italic;color:var(--muted);font-size:12px;font-weight:400;margin-top:2px;display:block}
+.cot-hist-amt{font-family:var(--serif);font-size:15px;color:var(--tinta);font-variant-numeric:tabular-nums;font-weight:700;text-align:right}
+.cot-estado{font-size:10px;padding:3px 10px;border-radius:20px;letter-spacing:0.08em;font-weight:500;background:transparent;color:var(--muted);border:1px solid var(--line);cursor:pointer;font-family:var(--sans)}
+.cot-estado.pendiente{background:#FAEEDA;color:var(--dorado-oscuro);border-color:transparent}
+.cot-estado.aceptada{background:#E1EBE5;color:var(--verde-oscuro);border-color:transparent}
+.cot-estado.rechazada{background:#F5E1E1;color:var(--red);border-color:transparent}
+.cot-estado.entregada{background:var(--tinta);color:var(--dorado-claro);border-color:transparent}
+
+/* CAJA */
+.caja-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-bottom:32px}
+.caja-cell{background:var(--crema-soft);padding:22px 20px}
+.caja-cell.ingresos{background:#E1EBE5}
+.caja-cell.egresos{background:#F5E1E1}
+.caja-cell.utilidad{background:var(--tinta);color:var(--crema)}
+.caja-cell.utilidad .kpi-label{color:var(--dorado-claro)}
+.caja-cell.utilidad .kpi-sub{color:var(--dorado-claro);opacity:0.7}
+
+.mov-row{display:grid;grid-template-columns:70px 1fr auto auto auto;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line-soft)}
+.mov-row:last-child{border-bottom:none}
+.mov-date{font-family:var(--serif);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.mov-desc{font-size:14px;color:var(--tinta);min-width:0}
+.mov-desc .cat{font-family:var(--serif);font-style:italic;color:var(--muted);font-size:12px;margin-top:2px;display:block}
+.mov-cat-tag{font-size:10px;padding:2px 8px;border-radius:2px;font-weight:500;letter-spacing:0.05em}
+.mov-amt{font-family:var(--serif);font-size:15px;font-variant-numeric:tabular-nums;font-weight:700;text-align:right;min-width:110px}
+.mov-amt.in{color:var(--verde-oscuro)}
+.mov-amt.out{color:var(--red)}
+.mov-amt.self{color:var(--dorado-oscuro)}
+
+.egresos-por-cat{margin-top:24px}
+
+
+  .shell{padding:24px 18px 80px}
+  .head-l .biz{font-size:32px}
+  .head-r{text-align:left}
+  .kpis{grid-template-columns:1fr 1fr}
+  .two-col,.three-col{grid-template-columns:1fr}
+  .quick-grid{grid-template-columns:1fr 1fr}
+  .quick-grid .full{grid-column:span 2}
+  .disenos-grid{grid-template-columns:1fr}
+  .table{font-size:13px}
+  .cot-layout{grid-template-columns:1fr}
+  .cot-summary{position:relative;top:0}
+  .cot-line-item{grid-template-columns:1fr 1fr;gap:6px}
+  .caja-summary{grid-template-columns:1fr 1fr}
+  .mov-row{grid-template-columns:60px 1fr auto;gap:8px}
+  .mov-row .mov-cat-tag{display:none}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- HEADER -->
+<div class="head">
+  <div class="head-l">
+    <div class="eyebrow">Camisas y totes pintados a mano · Bogotá</div>
+    <div class="biz">Beyond.</div>
+    <div class="tag">Cada pieza, arte. Cada colección, una historia.</div>
+  </div>
+  <div class="head-r">
+    <div class="date" id="fechaCorta">—</div>
+    <div class="today" id="fechaLarga">—</div>
+    <div class="ver">Construido con Yovel</div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <button class="on" data-tab="panel">Panel</button>
+  <button data-tab="ventas">Ventas</button>
+  <button data-tab="cotizador">Cotizador</button>
+  <button data-tab="caja">Caja</button>
+  <button data-tab="disenos">Diseños</button>
+  <button data-tab="insumos">Insumos</button>
+</nav>
+
+<!-- TAB: PANEL -->
+<section data-pane="panel">
+  <div class="section-eyebrow">Panorama del mes</div>
+  <h2 class="section-title">Cómo va <em>Beyond</em></h2>
+
+  <div class="kpis" id="kpiGrid"></div>
+
+  <div class="two-col">
+    <div class="card">
+      <h3 class="card-title">Diseños <em>más pedidos</em> del mes <span class="meta" id="rankMetaDis"></span></h3>
+      <div class="ranked" id="rankingDisenos"></div>
+    </div>
+    <div class="card">
+      <h3 class="card-title">Camisa vs <em>Tote bag</em></h3>
+      <div id="mixCamisaTote"></div>
+      <div style="margin-top:16px;font-family:var(--serif);font-style:italic;color:var(--muted);font-size:13px;line-height:1.5" id="mixInsight"></div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <h3 class="card-title">Colecciones que <em>funcionan</em></h3>
+      <div class="ranked" id="rankingColecciones"></div>
+    </div>
+    <div class="card">
+      <h3 class="card-title">Últimas <em>ventas</em></h3>
+      <div class="timeline" id="ultimasVentas"></div>
+    </div>
+  </div>
+</section>
+
+<!-- TAB: VENTAS -->
+<section data-pane="ventas" style="display:none">
+  <div class="section-eyebrow">Registro de ventas</div>
+  <h2 class="section-title">Cada pieza, un <em>encuentro</em></h2>
+
+  <div class="quick">
+    <div class="quick-eyebrow">Registro rápido</div>
+    <div class="quick-title">Se vendió una <em>pieza</em></div>
+    <div class="quick-grid">
+      <select id="vProducto" onchange="actualizarTotal()">
+        <option value="camisa">Camisa</option>
+        <option value="tote">Tote bag</option>
+      </select>
+      <select id="vDiseno" class="full" onchange="autoLlenarPrecio()"></select>
+      <select id="vTalla">
+        <option value="">Talla</option>
+        <option value="XS">XS</option>
+        <option value="S">S</option>
+        <option value="M">M</option>
+        <option value="L">L</option>
+        <option value="XL">XL</option>
+        <option value="Única">Única</option>
+      </select>
+      <select id="vColor">
+        <option value="">Color base</option>
+        <option value="Blanco">Blanco</option>
+        <option value="Crema">Crema</option>
+        <option value="Nude">Nude</option>
+        <option value="Vainilla">Vainilla</option>
+        <option value="Arena">Arena</option>
+        <option value="Negro">Negro</option>
+        <option value="Crudo">Crudo</option>
+      </select>
+      <input type="number" id="vPrecio" placeholder="Precio $" onchange="actualizarTotal()"/>
+      <select id="vPlataforma">
+        <option value="Instagram">Instagram</option>
+        <option value="WhatsApp">WhatsApp</option>
+        <option value="Persona">En persona</option>
+        <option value="Feria">Feria</option>
+      </select>
+      <input type="text" id="vCliente" placeholder="Cliente / Nota..." class="full"/>
+      <input type="date" id="vFecha"/>
+    </div>
+    <div class="quick-actions">
+      <div class="quick-total"><em>Total</em><span id="vTotal">$0</span></div>
+      <button class="btn" onclick="registrarVenta()">Registrar venta</button>
+    </div>
+    <div class="feedback" id="vFb"></div>
+  </div>
+
+  <div class="card">
+    <h3 class="card-title">Historial <em>reciente</em> <span class="meta" id="histCount">—</span></h3>
+    <div class="filters">
+      <select id="fCol" onchange="renderHistorial()">
+        <option value="todas">Todas las colecciones</option>
+      </select>
+      <select id="fProd" onchange="renderHistorial()">
+        <option value="todos">Camisas y totes</option>
+        <option value="camisa">Solo camisas</option>
+        <option value="tote">Solo totes</option>
+      </select>
+    </div>
+    <div class="timeline" id="historialVentas"></div>
+  </div>
+</section>
+
+<!-- TAB: DISEÑOS -->
+<section data-pane="disenos" style="display:none">
+  <div class="section-eyebrow">Catálogo de arte</div>
+  <h2 class="section-title">Los <em>diseños</em> de Beyond</h2>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:14px;flex-wrap:wrap">
+    <div style="font-family:var(--serif);font-style:italic;color:var(--muted);font-size:14px;max-width:520px;line-height:1.5">
+      Cada colección agrupa diseños con un concepto. Al vender, seleccionas el diseño y el sistema aprende qué está funcionando.
+    </div>
+    <button class="btn" onclick="abrirModalDiseno()">+ Nuevo diseño</button>
+  </div>
+
+  <div id="catalogoDisenos"></div>
+</section>
+
+<!-- TAB: INSUMOS -->
+<section data-pane="insumos" style="display:none">
+  <div class="section-eyebrow">Inventario</div>
+  <h2 class="section-title">Materiales <em>en la mesa</em></h2>
+
+  <div class="quick">
+    <div class="quick-eyebrow">Registrar compra</div>
+    <div class="quick-title">Llegó <em>mercado</em></div>
+    <div class="quick-grid">
+      <select id="cIng" class="full" style="grid-column:span 3"></select>
+      <input type="number" id="cCant" placeholder="Cantidad" step="0.01"/>
+      <input type="number" id="cCosto" placeholder="Costo total $"/>
+      <input type="date" id="cFecha"/>
+    </div>
+    <div class="quick-actions">
+      <div style="font-family:var(--serif);font-style:italic;color:var(--dorado-claro);font-size:13px">Se actualiza el costo unitario automáticamente</div>
+      <button class="btn" onclick="registrarCompra()">Registrar compra</button>
+    </div>
+    <div class="feedback" id="cFb"></div>
+  </div>
+
+  <div class="card">
+    <h3 class="card-title">Stock <em>actual</em></h3>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Insumo</th>
+          <th class="right">Stock</th>
+          <th class="right">Costo unidad</th>
+          <th class="right">Estado</th>
+        </tr>
+      </thead>
+      <tbody id="insumosTbody"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- TAB: COTIZADOR -->
+<section data-pane="cotizador" style="display:none">
+  <div class="section-eyebrow">Encargos personalizados</div>
+  <h2 class="section-title">Calcular una <em>cotización</em></h2>
+
+  <div class="cot-layout">
+    <div class="cot-form">
+      <h3>Datos del <em>encargo</em></h3>
+
+      <div class="cot-group">
+        <div class="cot-group-title">Cliente y prenda</div>
+        <div class="cot-row">
+          <input type="text" id="ctCliente" placeholder="Cliente / referencia" oninput="calcularCotizacion()"/>
+          <input type="text" id="ctContacto" placeholder="WhatsApp o correo" oninput="calcularCotizacion()"/>
+        </div>
+        <div class="cot-row three">
+          <select id="ctTipoPrenda" onchange="calcularCotizacion()">
+            <option value="Camisa">Camisa</option>
+            <option value="Tote bag">Tote bag</option>
+            <option value="Chaqueta">Chaqueta</option>
+            <option value="Pantalón">Pantalón</option>
+            <option value="Vestido">Vestido</option>
+            <option value="Buzo/Hoodie">Buzo/Hoodie</option>
+            <option value="Otro">Otro</option>
+          </select>
+          <input type="number" id="ctCantidad" placeholder="Cantidad" value="1" onchange="calcularCotizacion()"/>
+          <input type="number" id="ctDias" placeholder="Días entrega" value="10" onchange="calcularCotizacion()"/>
+        </div>
+        <div class="cot-row full">
+          <input type="text" id="ctDescripcion" placeholder="Descripción del diseño..." oninput="calcularCotizacion()"/>
+        </div>
+      </div>
+
+      <div class="cot-group">
+        <div class="cot-group-title">Materiales del encargo</div>
+        <div id="ctMateriales"></div>
+        <button class="cot-line-add" onclick="addMaterial()">+ Agregar material</button>
+      </div>
+
+      <div class="cot-group">
+        <div class="cot-group-title">Mano de obra</div>
+        <div class="cot-row three">
+          <div>
+            <label>Horas estimadas</label>
+            <input type="number" id="ctHoras" placeholder="4" value="4" onchange="calcularCotizacion()"/>
+          </div>
+          <div>
+            <label>Valor por hora ($)</label>
+            <input type="number" id="ctValorHora" placeholder="15000" value="15000" onchange="calcularCotizacion()"/>
+          </div>
+          <div>
+            <label>Complejidad</label>
+            <select id="ctComplejidad" onchange="calcularCotizacion()">
+              <option value="1">Estándar</option>
+              <option value="1.3">Media (+30%)</option>
+              <option value="1.6">Alta (+60%)</option>
+              <option value="2">Muy alta (×2)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="cot-group">
+        <div class="cot-group-title">Costos indirectos</div>
+        <div class="cot-row three">
+          <div>
+            <label>Empaque ($)</label>
+            <input type="number" id="ctEmpaque" placeholder="2500" value="2500" onchange="calcularCotizacion()"/>
+          </div>
+          <div>
+            <label>Envío ($)</label>
+            <input type="number" id="ctEnvio" placeholder="0" value="0" onchange="calcularCotizacion()"/>
+          </div>
+          <div>
+            <label>Otros ($)</label>
+            <input type="number" id="ctOtros" placeholder="0" value="0" onchange="calcularCotizacion()"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="cot-group">
+        <div class="cot-group-title">Ganancia</div>
+        <div class="cot-row">
+          <div>
+            <label>Margen (%)</label>
+            <input type="number" id="ctMargen" placeholder="40" value="40" onchange="calcularCotizacion()"/>
+          </div>
+          <div>
+            <label>Anticipo (%)</label>
+            <input type="number" id="ctAnticipo" placeholder="50" value="50" onchange="calcularCotizacion()"/>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cot-summary">
+      <h3>Cotización <em>estimada</em></h3>
+      <div class="cot-summary-cliente" id="cotClienteResumen">— · —</div>
+
+      <div class="cot-line">
+        <span class="cot-line-label">Materiales</span>
+        <span class="cot-line-val" id="cotMateriales">$0</span>
+      </div>
+      <div class="cot-line">
+        <span class="cot-line-label">Mano de obra</span>
+        <span class="cot-line-val" id="cotManoObra">$0</span>
+      </div>
+      <div class="cot-line">
+        <span class="cot-line-label">Costos indirectos</span>
+        <span class="cot-line-val" id="cotIndirectos">$0</span>
+      </div>
+      <div class="cot-line emph">
+        <span class="cot-line-label">Subtotal (costo real)</span>
+        <span class="cot-line-val" id="cotSubtotal">$0</span>
+      </div>
+      <div class="cot-line">
+        <span class="cot-line-label">Margen de ganancia</span>
+        <span class="cot-line-val" id="cotMargenVal">$0</span>
+      </div>
+
+      <div class="cot-final">
+        <div class="cot-final-label">Precio sugerido</div>
+        <div class="cot-final-value" id="cotFinal">$0</div>
+        <div class="cot-anticipo">Anticipo: <strong id="cotAnticipoVal">$0</strong> · Saldo: <strong id="cotSaldoVal">$0</strong></div>
+      </div>
+
+      <div class="cot-summary-actions">
+        <button class="btn" onclick="guardarCotizacion()">Guardar cotización</button>
+        <button class="btn btn-soft" onclick="limpiarCotizacion()">Limpiar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 class="card-title">Cotizaciones <em>guardadas</em> <span class="meta" id="cotCount">—</span></h3>
+    <div id="cotHistorial"></div>
+  </div>
+</section>
+
+<!-- TAB: CAJA -->
+<section data-pane="caja" style="display:none">
+  <div class="section-eyebrow">Control de caja</div>
+  <h2 class="section-title">A dónde va el <em>dinero</em></h2>
+
+  <div class="caja-summary" id="cajaSummary"></div>
+
+  <div class="quick">
+    <div class="quick-eyebrow">Registrar movimiento</div>
+    <div class="quick-title">Nuevo <em>gasto o ingreso</em></div>
+    <div class="quick-grid">
+      <select id="mTipo" onchange="actualizarCategorias()">
+        <option value="egreso">Egreso</option>
+        <option value="ingreso">Ingreso extra</option>
+        <option value="retiro">Retiro personal</option>
+      </select>
+      <select id="mCategoria"></select>
+      <input type="number" id="mMonto" placeholder="Monto $"/>
+      <input type="text" id="mDesc" placeholder="Descripción..." class="full"/>
+      <input type="date" id="mFecha"/>
+    </div>
+    <div class="quick-actions">
+      <div style="font-family:var(--serif);font-style:italic;color:var(--dorado-claro);font-size:13px">Las ventas ya cuentan como ingreso automáticamente</div>
+      <button class="btn" onclick="registrarMovimiento()">Registrar</button>
+    </div>
+    <div class="feedback" id="mFb"></div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <h3 class="card-title">A dónde va el <em>dinero</em> este mes</h3>
+      <div id="egresosPorCategoria"></div>
+    </div>
+    <div class="card">
+      <h3 class="card-title">Últimos <em>movimientos</em></h3>
+      <div id="ultimosMovimientos"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 class="card-title">Historial <em>completo</em> del mes</h3>
+    <div id="cajaHistorialCompleto"></div>
+  </div>
+</section>
+
+
+<div class="modal-bg" id="modalDiseno">
+  <div class="modal">
+    <h3>Nuevo <em style="font-style:italic;color:var(--verde-oscuro)">diseño</em></h3>
+    <div class="field">
+      <label>Nombre del diseño</label>
+      <input type="text" id="mdNombre" placeholder="Ej: Corazón en llamas"/>
+    </div>
+    <div class="field">
+      <label>Colección</label>
+      <select id="mdColeccion"></select>
+    </div>
+    <div class="field">
+      <label>Se aplica a</label>
+      <select id="mdTipo">
+        <option value="ambos">Camisa y tote bag</option>
+        <option value="camisa">Solo camisa</option>
+        <option value="tote">Solo tote bag</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Precio sugerido ($)</label>
+      <input type="number" id="mdPrecio" placeholder="75000"/>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-soft" onclick="cerrarModalDiseno()">Cancelar</button>
+      <button class="btn" onclick="guardarNuevoDiseno()">Guardar diseño</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="foot">
+  <strong>Beyond · Panel de operación</strong>
+  Construido con Yovel · Transformamos tareas en decisiones
+</div>
+
+</div>
+
+<script>
+const MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const MESES_COR=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+const DIAS=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+const STORE_KEY='beyond_v1';
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).substr(2,4);
+const fmt=n=>'$'+Math.round(n||0).toLocaleString('es-CO');
+const today=()=>new Date().toISOString().split('T')[0];
+const todayMonth=()=>today().substr(0,7);
+
+/* SEED DATA — basado en el Excel real de Beyond */
+function seed(){
+  const yyyy=new Date().getFullYear();
+  const mm=String(new Date().getMonth()+1).padStart(2,'0');
+  const d=(day)=>`${yyyy}-${mm}-${String(day).padStart(2,'0')}`;
+  return {
+    colecciones:[
+      {id:'opportunity',nombre:'Opportunity',concepto:'Primera colección estructurada de Beyond',estado:'activa',fecha:'2025-12-01'},
+      {id:'flaming',nombre:'Flaming Heart',concepto:'Corazones encendidos',estado:'activa',fecha:'2025-02-14'},
+      {id:'staytune',nombre:'Stay in Tune',concepto:'Estar en sintonía con uno mismo',estado:'activa',fecha:'2025-08-15'},
+      {id:'corazones',nombre:'Corazones y Frutas',concepto:'Diseños personalizados',estado:'activa',fecha:'2025-06-01'},
+      {id:'iniciales',nombre:'Diseños iniciales',concepto:'ADN, Minimalista, Llamas Amarillas — primeras piezas',estado:'archivada',fecha:'2024-11-01'}
+    ],
+    disenos:[
+      {id:'d_opp',nombre:'OPPORTUNITY',coleccion:'opportunity',tipo:'camisa',precio:85000},
+      {id:'d_opp_c',nombre:'OPPORTUNITY (croptop)',coleccion:'opportunity',tipo:'camisa',precio:85000},
+      {id:'d_opp_m',nombre:'OPPORTUNITY (mini)',coleccion:'opportunity',tipo:'camisa',precio:70000},
+      {id:'d_llamas',nombre:'En llamas',coleccion:'flaming',tipo:'camisa',precio:80000},
+      {id:'d_corazon',nombre:'Corazón encendido',coleccion:'flaming',tipo:'ambos',precio:75000},
+      {id:'d_stay',nombre:'In Tune',coleccion:'staytune',tipo:'ambos',precio:78000},
+      {id:'d_frutas',nombre:'Frutas',coleccion:'corazones',tipo:'tote',precio:68000},
+      {id:'d_adn',nombre:'ADN',coleccion:'iniciales',tipo:'camisa',precio:72000},
+      {id:'d_min',nombre:'Minimalista',coleccion:'iniciales',tipo:'camisa',precio:77000}
+    ],
+    insumos:[
+      {id:'ins_cam',nombre:'Camisetas blancas',tipo:'camisa',unidad:'unidad',stockIni:19,costoUnit:25500},
+      {id:'ins_croptop',nombre:'Croptops blancos',tipo:'camisa',unidad:'unidad',stockIni:5,costoUnit:20000},
+      {id:'ins_tote',nombre:'Tote bags crudas',tipo:'tote',unidad:'unidad',stockIni:15,costoUnit:19000},
+      {id:'ins_cajas',nombre:'Cajas de empaque',tipo:'material',unidad:'unidad',stockIni:30,costoUnit:2200},
+      {id:'ins_pintura',nombre:'Pinturas de tela',tipo:'material',unidad:'unidad',stockIni:12,costoUnit:4200},
+      {id:'ins_stickers',nombre:'Stickers de marca',tipo:'material',unidad:'unidad',stockIni:100,costoUnit:100}
+    ],
+    compras:[
+      {id:'c1',ing:'ins_pintura',cantidad:6,costoTotal:19800,fecha:agoDate(20)}
+    ],
+    cotizaciones:[
+      {id:'ct1',fecha:agoDate(5),cliente:'María López',contacto:'@marialopez',tipoPrenda:'Chaqueta',cantidad:1,dias:14,descripcion:'Chaqueta con corazón bordado y letras',materiales:[{nombre:'Chaqueta base crudo',costo:65000},{nombre:'Hilos y bordado',costo:12000}],horas:8,valorHora:15000,complejidad:1.3,empaque:3500,envio:12000,otros:0,margen:40,anticipo:50,estado:'aceptada'},
+      {id:'ct2',fecha:agoDate(2),cliente:'Camila R.',contacto:'@camilar',tipoPrenda:'Camisa',cantidad:2,dias:10,descripcion:'Dos camisas con nombre y fecha',materiales:[{nombre:'Camisetas blancas',costo:51000},{nombre:'Pintura especial',costo:8000}],horas:6,valorHora:15000,complejidad:1,empaque:5000,envio:0,otros:0,margen:35,anticipo:50,estado:'pendiente'}
+    ],
+    movimientos_caja:[
+      {id:'m1',fecha:agoDate(20),tipo:'egreso',categoria:'Materia prima',monto:19800,desc:'Pinturas Critela'},
+      {id:'m2',fecha:agoDate(15),tipo:'egreso',categoria:'Feria',monto:180000,desc:'Stand feria Chapinero'},
+      {id:'m3',fecha:agoDate(10),tipo:'egreso',categoria:'Transporte',monto:24000,desc:'Uber a taller y entregas'},
+      {id:'m4',fecha:agoDate(8),tipo:'egreso',categoria:'Publicidad',monto:50000,desc:'Anuncios Instagram'},
+      {id:'m5',fecha:agoDate(6),tipo:'egreso',categoria:'Materia prima',monto:340000,desc:'10 camisetas blancas nuevas'},
+      {id:'m6',fecha:agoDate(3),tipo:'retiro',categoria:'Retiro personal',monto:500000,desc:'Retiro personal quincena'}
+    ],
+    ventas:[
+      {id:uid(),fecha:d(1),producto:'camisa',diseno:'d_opp',talla:'L',color:'Vainilla',precio:87500,plataforma:'Instagram',cliente:'Samuel Vargas'},
+      {id:uid(),fecha:d(2),producto:'tote',diseno:'d_frutas',talla:'Única',color:'Crudo',precio:68000,plataforma:'Instagram',cliente:'Paula Ximena'},
+      {id:uid(),fecha:d(4),producto:'camisa',diseno:'d_opp',talla:'XL',color:'Vainilla',precio:85000,plataforma:'WhatsApp',cliente:'June Marie'},
+      {id:uid(),fecha:d(5),producto:'camisa',diseno:'d_corazon',talla:'M',color:'Blanco',precio:75000,plataforma:'Instagram',cliente:'Alba Macías'},
+      {id:uid(),fecha:d(7),producto:'camisa',diseno:'d_llamas',talla:'XL',color:'Vainilla',precio:80000,plataforma:'WhatsApp',cliente:'Rosetta'},
+      {id:uid(),fecha:d(9),producto:'tote',diseno:'d_frutas',talla:'Única',color:'Crudo',precio:68000,plataforma:'Feria',cliente:'Feria Chapinero'},
+      {id:uid(),fecha:d(11),producto:'camisa',diseno:'d_opp_c',talla:'S',color:'Vainilla',precio:87500,plataforma:'Instagram',cliente:'Nicolle Benavides'},
+      {id:uid(),fecha:d(13),producto:'camisa',diseno:'d_min',talla:'L',color:'Arena',precio:72000,plataforma:'Instagram',cliente:'Nathaly'},
+      {id:uid(),fecha:d(15),producto:'tote',diseno:'d_corazon',talla:'Única',color:'Crudo',precio:75000,plataforma:'WhatsApp',cliente:'María F.'},
+      {id:uid(),fecha:d(17),producto:'camisa',diseno:'d_opp',talla:'M',color:'Blanco',precio:85000,plataforma:'Instagram',cliente:'Andrea R.'},
+      {id:uid(),fecha:d(19),producto:'camisa',diseno:'d_stay',talla:'L',color:'Crema',precio:78000,plataforma:'Persona',cliente:'Julián López'},
+      {id:uid(),fecha:d(21),producto:'tote',diseno:'d_frutas',talla:'Única',color:'Crudo',precio:68000,plataforma:'Instagram',cliente:'Camila Torres'}
+    ]
+  };
+}
+function agoDate(days){const d=new Date();d.setDate(d.getDate()-days);return d.toISOString().split('T')[0]}
+
+/* STORAGE */
+function load(){
+  try{const raw=localStorage.getItem(STORE_KEY);if(!raw)return seed();return JSON.parse(raw)}
+  catch(e){return seed()}
+}
+function save(){try{localStorage.setItem(STORE_KEY,JSON.stringify(D))}catch(e){}}
+let D=load();
+
+/* HELPERS */
+function inMonth(dateStr,ym){return dateStr.startsWith(ym)}
+function inDay(dateStr){return dateStr===today()}
+function getDiseno(id){return D.disenos.find(x=>x.id===id)}
+function getColeccion(id){return D.colecciones.find(x=>x.id===id)}
+function getInsumo(id){return D.insumos.find(x=>x.id===id)}
+function ventasMes(){return D.ventas.filter(v=>inMonth(v.fecha,todayMonth()))}
+function ventasHoy(){return D.ventas.filter(v=>inDay(v.fecha))}
+
+/* RENDER: HEADER */
+function renderHeader(){
+  const d=new Date();
+  document.getElementById('fechaCorta').textContent=DIAS[d.getDay()].toUpperCase();
+  document.getElementById('fechaLarga').textContent=`${d.getDate()} de ${MESES[d.getMonth()]}`;
+}
+
+/* RENDER: KPIs */
+function renderKpis(){
+  const vMes=ventasMes();
+  const ingresos=vMes.reduce((s,v)=>s+v.precio,0);
+  const numPedidos=vMes.length;
+  const ticket=numPedidos>0?ingresos/numPedidos:0;
+  const vHoy=ventasHoy();
+  const ingresosHoy=vHoy.reduce((s,v)=>s+v.precio,0);
+
+  document.getElementById('kpiGrid').innerHTML=`
+    <div class="kpi"><div class="kpi-label">Ingresos del mes</div><div class="kpi-value">${fmt(ingresos)}</div><div class="kpi-sub">${numPedidos} pedido${numPedidos===1?'':'s'}</div></div>
+    <div class="kpi"><div class="kpi-label">Ticket promedio</div><div class="kpi-value gold">${fmt(ticket)}</div><div class="kpi-sub">por pieza vendida</div></div>
+    <div class="kpi"><div class="kpi-label">Ventas hoy</div><div class="kpi-value green">${fmt(ingresosHoy)}</div><div class="kpi-sub">${vHoy.length} pedido${vHoy.length===1?'':'s'}</div></div>
+    <div class="kpi"><div class="kpi-label">Diseños activos</div><div class="kpi-value small">${disenosActivos().length}</div><div class="kpi-sub">en catálogo</div></div>
+  `;
+}
+
+function disenosActivos(){
+  const colActivas=D.colecciones.filter(c=>c.estado==='activa').map(c=>c.id);
+  return D.disenos.filter(d=>colActivas.includes(d.coleccion));
+}
+
+/* RENDER: RANKING DISEÑOS */
+function renderRankingDisenos(){
+  const vMes=ventasMes();
+  const agg={};
+  vMes.forEach(v=>{
+    agg[v.diseno]=agg[v.diseno]||{count:0,ing:0};
+    agg[v.diseno].count++;
+    agg[v.diseno].ing+=v.precio;
+  });
+  const ranked=Object.entries(agg).map(([id,data])=>{
+    const dis=getDiseno(id);
+    const col=dis?getColeccion(dis.coleccion):null;
+    return{dis,col,count:data.count,ing:data.ing};
+  }).filter(r=>r.dis).sort((a,b)=>b.count-a.count).slice(0,6);
+
+  document.getElementById('rankMetaDis').textContent=`${vMes.length} venta${vMes.length===1?'':'s'} este mes`;
+
+  const el=document.getElementById('rankingDisenos');
+  if(!ranked.length){el.innerHTML='<div class="empty">Sin ventas este mes todavía</div>';return}
+  const max=ranked[0].count;
+  el.innerHTML=ranked.map((r,i)=>`
+    <div class="rank-row">
+      <div class="rank-num">${String(i+1).padStart(2,'0')}</div>
+      <div style="flex:1;min-width:0">
+        <div class="rank-name">${r.dis.nombre}<em>${r.col?.nombre||''}</em></div>
+        <div class="rank-sub">${r.count} venta${r.count===1?'':'s'} · ${fmt(r.ing)}</div>
+      </div>
+      <div class="rank-bar"><div class="rank-bar-fill" style="width:${(r.count/max)*100}%"></div></div>
+    </div>
+  `).join('');
+}
+
+/* RENDER: MIX CAMISA vs TOTE */
+function renderMix(){
+  const vMes=ventasMes();
+  const cam=vMes.filter(v=>v.producto==='camisa');
+  const tot=vMes.filter(v=>v.producto==='tote');
+  const total=vMes.length;
+  const el=document.getElementById('mixCamisaTote');
+  if(total===0){el.innerHTML='<div class="empty">Sin ventas este mes</div>';document.getElementById('mixInsight').textContent='';return}
+  const pctCam=(cam.length/total)*100;
+  const pctTot=(tot.length/total)*100;
+  el.innerHTML=`
+    <div class="mix">
+      ${pctCam>0?`<div class="mix-camisa" style="width:${pctCam}%">${pctCam>15?'CAMISAS':''}</div>`:''}
+      ${pctTot>0?`<div class="mix-tote" style="width:${pctTot}%">${pctTot>15?'TOTES':''}</div>`:''}
+    </div>
+    <div class="mix-legend">
+      <span>${cam.length} camisas · ${Math.round(pctCam)}%</span>
+      <span>${tot.length} totes · ${Math.round(pctTot)}%</span>
+    </div>
+  `;
+  let insight='';
+  if(pctCam>80)insight='La marca está muy sesgada a camisas — vale la pena empujar totes en la próxima colección.';
+  else if(pctCam>60)insight='Camisas lideran pero los totes tienen espacio para crecer.';
+  else if(pctCam<40)insight='Los totes están teniendo un mes fuerte — ¿algo específico que amplificar?';
+  else insight='Mix balanceado — buen síntoma de marca completa.';
+  document.getElementById('mixInsight').textContent=insight;
+}
+
+/* RENDER: RANKING COLECCIONES */
+function renderRankingColecciones(){
+  const vMes=ventasMes();
+  const agg={};
+  vMes.forEach(v=>{
+    const dis=getDiseno(v.diseno);
+    if(!dis)return;
+    agg[dis.coleccion]=agg[dis.coleccion]||{count:0,ing:0};
+    agg[dis.coleccion].count++;
+    agg[dis.coleccion].ing+=v.precio;
+  });
+  const ranked=Object.entries(agg).map(([id,data])=>{
+    const col=getColeccion(id);
+    return{col,count:data.count,ing:data.ing};
+  }).filter(r=>r.col).sort((a,b)=>b.ing-a.ing);
+
+  const el=document.getElementById('rankingColecciones');
+  if(!ranked.length){el.innerHTML='<div class="empty">Sin datos</div>';return}
+  const max=ranked[0].ing;
+  el.innerHTML=ranked.map((r,i)=>`
+    <div class="rank-row">
+      <div class="rank-num">${String(i+1).padStart(2,'0')}</div>
+      <div style="flex:1;min-width:0">
+        <div class="rank-name">${r.col.nombre}</div>
+        <div class="rank-sub">${r.count} venta${r.count===1?'':'s'}</div>
+      </div>
+      <div class="rank-bar"><div class="rank-bar-fill" style="width:${(r.ing/max)*100}%"></div></div>
+      <div class="rank-stat">${fmt(r.ing)}</div>
+    </div>
+  `).join('');
+}
+
+/* RENDER: ÚLTIMAS VENTAS */
+function renderUltimasVentas(){
+  const ultimas=[...D.ventas].sort((a,b)=>b.fecha.localeCompare(a.fecha)).slice(0,6);
+  const el=document.getElementById('ultimasVentas');
+  if(!ultimas.length){el.innerHTML='<div class="empty">Sin ventas registradas</div>';return}
+  el.innerHTML=ultimas.map(v=>{
+    const dis=getDiseno(v.diseno);
+    const d=new Date(v.fecha+'T12:00:00');
+    return`<div class="time-row">
+      <div class="time-date">${d.getDate()} ${MESES_COR[d.getMonth()]}</div>
+      <div class="time-prod">
+        <div class="diseno-name">${dis?.nombre||v.diseno} <span style="color:var(--muted);font-size:12px">· ${v.producto==='camisa'?'Camisa':'Tote'}</span></div>
+        <div class="diseno-meta">${v.talla||'—'} · ${v.color||'—'} · ${v.cliente||'sin nombre'}</div>
+      </div>
+      <div>
+        <div class="time-amt">${fmt(v.precio)}</div>
+        <div class="time-plat">${v.plataforma}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* RENDER: DISEÑO SELECT */
+function llenarSelectDisenos(){
+  const prod=document.getElementById('vProducto').value;
+  const disponibles=disenosActivos().filter(d=>d.tipo==='ambos'||d.tipo===prod);
+  const sel=document.getElementById('vDiseno');
+  sel.innerHTML=disponibles.map(d=>{
+    const col=getColeccion(d.coleccion);
+    return`<option value="${d.id}">${d.nombre} · ${col?.nombre||''}</option>`;
+  }).join('');
+  autoLlenarPrecio();
+}
+
+function autoLlenarPrecio(){
+  const id=document.getElementById('vDiseno').value;
+  const dis=getDiseno(id);
+  if(dis)document.getElementById('vPrecio').value=dis.precio;
+  actualizarTotal();
+}
+
+function actualizarTotal(){
+  const p=parseFloat(document.getElementById('vPrecio').value)||0;
+  document.getElementById('vTotal').textContent=fmt(p);
+}
+
+/* RENDER: HISTORIAL */
+function llenarFiltroColecciones(){
+  const sel=document.getElementById('fCol');
+  sel.innerHTML='<option value="todas">Todas las colecciones</option>'+
+    D.colecciones.filter(c=>c.estado==='activa').map(c=>`<option value="${c.id}">${c.nombre}</option>`).join('')+
+    D.colecciones.filter(c=>c.estado==='archivada').map(c=>`<option value="${c.id}">${c.nombre} (archivada)</option>`).join('');
+}
+
+function renderHistorial(){
+  const fCol=document.getElementById('fCol').value;
+  const fProd=document.getElementById('fProd').value;
+  let list=[...D.ventas].sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  if(fProd!=='todos')list=list.filter(v=>v.producto===fProd);
+  if(fCol!=='todas')list=list.filter(v=>{const d=getDiseno(v.diseno);return d?.coleccion===fCol});
+  document.getElementById('histCount').textContent=`${list.length} venta${list.length===1?'':'s'}`;
+
+  const el=document.getElementById('historialVentas');
+  if(!list.length){el.innerHTML='<div class="empty">Sin ventas para mostrar</div>';return}
+  el.innerHTML=list.slice(0,50).map(v=>{
+    const dis=getDiseno(v.diseno);
+    const col=dis?getColeccion(dis.coleccion):null;
+    const d=new Date(v.fecha+'T12:00:00');
+    return`<div class="time-row">
+      <div class="time-date">${d.getDate()} ${MESES_COR[d.getMonth()]}</div>
+      <div class="time-prod">
+        <div class="diseno-name">${dis?.nombre||v.diseno} <span style="color:var(--muted);font-size:12px">· ${v.producto==='camisa'?'Camisa':'Tote'}</span></div>
+        <div class="diseno-meta">${col?.nombre||'—'} · ${v.talla||'—'} · ${v.color||'—'} · ${v.cliente||'sin nombre'}</div>
+      </div>
+      <div>
+        <div class="time-amt">${fmt(v.precio)}</div>
+        <div class="time-plat">${v.plataforma}</div>
+      </div>
+      <button class="time-del" onclick="delVenta('${v.id}')">✕</button>
+    </div>`;
+  }).join('');
+}
+
+/* RENDER: CATÁLOGO DISEÑOS */
+function renderCatalogoDisenos(){
+  const cols=D.colecciones;
+  const el=document.getElementById('catalogoDisenos');
+  el.innerHTML=cols.map(col=>{
+    const disenos=D.disenos.filter(d=>d.coleccion===col.id);
+    const vMes=ventasMes().filter(v=>{const d=getDiseno(v.diseno);return d?.coleccion===col.id});
+    return`<div class="coleccion-block">
+      <div class="col-head">
+        <div>
+          <span class="col-name">${col.nombre} <em>· ${new Date(col.fecha).getFullYear()}</em></span>
+          <span class="col-status ${col.estado}">${col.estado}</span>
+        </div>
+        <div class="col-concepto">${col.concepto}</div>
+      </div>
+      ${disenos.length===0?'<div class="empty" style="padding:20px">Sin diseños en esta colección</div>':`
+      <div class="disenos-grid">
+        ${disenos.map(d=>{
+          const vendidosMes=vMes.filter(v=>v.diseno===d.id).length;
+          const vendidosTotal=D.ventas.filter(v=>v.diseno===d.id).length;
+          const aplicaA=d.tipo==='ambos'?'Camisa y tote':d.tipo==='camisa'?'Solo camisa':'Solo tote';
+          return`<div class="diseno-card">
+            <div class="diseno-nombre">${d.nombre}</div>
+            <div class="diseno-tipo">${aplicaA}</div>
+            <div class="diseno-stats">
+              <div class="diseno-precio">${fmt(d.precio)}</div>
+              <div class="diseno-vendidos"><strong>${vendidosMes}</strong> este mes · ${vendidosTotal} total</div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>`}
+    </div>`;
+  }).join('');
+}
+
+/* RENDER: INSUMOS */
+function renderInsumos(){
+  llenarSelectInsumos();
+  if(!document.getElementById('cFecha').value)document.getElementById('cFecha').value=today();
+
+  document.getElementById('insumosTbody').innerHTML=D.insumos.map(i=>{
+    const stk=stockActual(i.id);
+    const stockIni=Math.max(i.stockIni,1);
+    const pct=Math.max(0,Math.min(stk/stockIni*100,100));
+    let tag,color;
+    if(stk<=0){tag='<span class="tag tag-out">agotado</span>';color='var(--red)'}
+    else if(stk<stockIni*0.25){tag='<span class="tag tag-low">bajo</span>';color='var(--dorado-oscuro)'}
+    else{tag='<span class="tag tag-ok">ok</span>';color='var(--verde-oscuro)'}
+    const tipoLabel=i.tipo==='camisa'?'Prenda base · camisa':i.tipo==='tote'?'Prenda base · tote':'Material';
+    return`<tr>
+      <td><div class="ins-name">${i.nombre}</div><div class="ins-meta">${tipoLabel}</div></td>
+      <td class="right">${stk.toFixed(stk<5&&stk>0?2:0)} ${i.unidad}<div class="stock-bar"><div class="stock-bar-fill" style="width:${pct}%;background:${color}"></div></div></td>
+      <td class="right">${fmt(i.costoUnit)}</td>
+      <td class="right">${tag}</td>
+    </tr>`;
+  }).join('');
+}
+
+function stockActual(insumoId){
+  const ins=getInsumo(insumoId);
+  if(!ins)return 0;
+  const compras=D.compras.filter(c=>c.ing===insumoId).reduce((s,c)=>s+c.cantidad,0);
+  // consumo por ventas: 1 prenda por venta
+  let consumido=0;
+  if(ins.tipo==='camisa'||ins.tipo==='tote'){
+    consumido=D.ventas.filter(v=>v.producto===ins.tipo).length;
+    // dividir entre insumos del mismo tipo (simple: consumo distribuido)
+    const otros=D.insumos.filter(x=>x.tipo===ins.tipo).length;
+    if(otros>1)consumido=consumido/otros;
+  } else {
+    // materiales genéricos: 1 por venta (aprox)
+    consumido=D.ventas.length*0.3;
+  }
+  return ins.stockIni+compras-consumido;
+}
+
+function llenarSelectInsumos(){
+  document.getElementById('cIng').innerHTML=D.insumos.map(i=>`<option value="${i.id}">${i.nombre}</option>`).join('');
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   COTIZADOR
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+let ctMaterialesLista=[
+  {nombre:'',costo:0}
+];
+
+function renderMateriales(){
+  const el=document.getElementById('ctMateriales');
+  el.innerHTML=ctMaterialesLista.map((m,i)=>`
+    <div class="cot-line-item">
+      <input type="text" placeholder="Nombre del material..." value="${escapeAttr(m.nombre)}" oninput="ctMaterialesLista[${i}].nombre=this.value;calcularCotizacion()"/>
+      <input type="number" placeholder="Costo unitario $" value="${m.costo||''}" oninput="ctMaterialesLista[${i}].costo=parseFloat(this.value)||0;calcularCotizacion()"/>
+      <div style="font-family:var(--serif);text-align:right;color:var(--muted);font-size:13px">${fmt(m.costo||0)}</div>
+      <button class="cot-line-del" onclick="removeMaterial(${i})">✕</button>
+    </div>
+  `).join('');
+}
+function escapeAttr(s){return String(s||'').replace(/"/g,'&quot;')}
+function addMaterial(){ctMaterialesLista.push({nombre:'',costo:0});renderMateriales();calcularCotizacion()}
+function removeMaterial(i){if(ctMaterialesLista.length>1){ctMaterialesLista.splice(i,1);renderMateriales();calcularCotizacion()}}
+
+function calcularCotizacion(){
+  const cantidad=parseFloat(document.getElementById('ctCantidad').value)||1;
+  const horas=parseFloat(document.getElementById('ctHoras').value)||0;
+  const valorHora=parseFloat(document.getElementById('ctValorHora').value)||0;
+  const complejidad=parseFloat(document.getElementById('ctComplejidad').value)||1;
+  const empaque=parseFloat(document.getElementById('ctEmpaque').value)||0;
+  const envio=parseFloat(document.getElementById('ctEnvio').value)||0;
+  const otros=parseFloat(document.getElementById('ctOtros').value)||0;
+  const margenPct=parseFloat(document.getElementById('ctMargen').value)||0;
+  const anticipoPct=parseFloat(document.getElementById('ctAnticipo').value)||0;
+  const cliente=document.getElementById('ctCliente').value.trim();
+  const tipoPrenda=document.getElementById('ctTipoPrenda').value;
+
+  const materiales=ctMaterialesLista.reduce((s,m)=>s+(m.costo||0),0)*cantidad;
+  const manoObra=horas*valorHora*complejidad;
+  const indirectos=empaque+envio+otros;
+  const subtotal=materiales+manoObra+indirectos;
+  const margen=subtotal*(margenPct/100);
+  const final=subtotal+margen;
+  const anticipo=final*(anticipoPct/100);
+  const saldo=final-anticipo;
+
+  document.getElementById('cotClienteResumen').textContent=`${cliente||'Sin cliente'} · ${tipoPrenda} × ${cantidad}`;
+  document.getElementById('cotMateriales').textContent=fmt(materiales);
+  document.getElementById('cotManoObra').textContent=fmt(manoObra);
+  document.getElementById('cotIndirectos').textContent=fmt(indirectos);
+  document.getElementById('cotSubtotal').textContent=fmt(subtotal);
+  document.getElementById('cotMargenVal').textContent=fmt(margen);
+  document.getElementById('cotFinal').textContent=fmt(final);
+  document.getElementById('cotAnticipoVal').textContent=fmt(anticipo);
+  document.getElementById('cotSaldoVal').textContent=fmt(saldo);
+}
+
+function limpiarCotizacion(){
+  document.getElementById('ctCliente').value='';
+  document.getElementById('ctContacto').value='';
+  document.getElementById('ctDescripcion').value='';
+  document.getElementById('ctCantidad').value=1;
+  document.getElementById('ctDias').value=10;
+  document.getElementById('ctHoras').value=4;
+  ctMaterialesLista=[{nombre:'',costo:0}];
+  renderMateriales();
+  calcularCotizacion();
+}
+
+function guardarCotizacion(){
+  const cliente=document.getElementById('ctCliente').value.trim();
+  if(!cliente){document.getElementById('cotClienteResumen').textContent='Falta el nombre del cliente';return}
+  const cot={
+    id:uid(),
+    fecha:today(),
+    cliente,
+    contacto:document.getElementById('ctContacto').value.trim(),
+    tipoPrenda:document.getElementById('ctTipoPrenda').value,
+    cantidad:parseFloat(document.getElementById('ctCantidad').value)||1,
+    dias:parseInt(document.getElementById('ctDias').value)||10,
+    descripcion:document.getElementById('ctDescripcion').value.trim(),
+    materiales:ctMaterialesLista.filter(m=>m.nombre||m.costo).map(m=>({...m})),
+    horas:parseFloat(document.getElementById('ctHoras').value)||0,
+    valorHora:parseFloat(document.getElementById('ctValorHora').value)||0,
+    complejidad:parseFloat(document.getElementById('ctComplejidad').value)||1,
+    empaque:parseFloat(document.getElementById('ctEmpaque').value)||0,
+    envio:parseFloat(document.getElementById('ctEnvio').value)||0,
+    otros:parseFloat(document.getElementById('ctOtros').value)||0,
+    margen:parseFloat(document.getElementById('ctMargen').value)||0,
+    anticipo:parseFloat(document.getElementById('ctAnticipo').value)||0,
+    estado:'pendiente'
+  };
+  D.cotizaciones=D.cotizaciones||[];
+  D.cotizaciones.push(cot);save();
+  limpiarCotizacion();
+  renderCotHistorial();
+  alert('Cotización guardada');
+}
+
+function calcularTotalCot(c){
+  const cantidad=c.cantidad||1;
+  const materiales=(c.materiales||[]).reduce((s,m)=>s+(m.costo||0),0)*cantidad;
+  const manoObra=(c.horas||0)*(c.valorHora||0)*(c.complejidad||1);
+  const indirectos=(c.empaque||0)+(c.envio||0)+(c.otros||0);
+  const subtotal=materiales+manoObra+indirectos;
+  const final=subtotal+subtotal*((c.margen||0)/100);
+  return final;
+}
+
+function renderCotHistorial(){
+  const list=[...(D.cotizaciones||[])].sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  document.getElementById('cotCount').textContent=`${list.length} cotización${list.length===1?'':'es'}`;
+  const el=document.getElementById('cotHistorial');
+  if(!list.length){el.innerHTML='<div class="empty">Cuando guardes cotizaciones aparecerán aquí</div>';return}
+  el.innerHTML=list.map(c=>{
+    const total=calcularTotalCot(c);
+    const d=new Date(c.fecha+'T12:00:00');
+    return`<div class="cot-hist-row">
+      <div class="cot-hist-date">${d.getDate()} ${MESES_COR[d.getMonth()]}</div>
+      <div>
+        <div class="cot-hist-name">${c.cliente} <span class="sub">${c.tipoPrenda} × ${c.cantidad} · ${c.descripcion||'sin descripción'}</span></div>
+      </div>
+      <div class="cot-hist-amt">${fmt(total)}</div>
+      <select class="cot-estado ${c.estado}" onchange="cambiarEstadoCot('${c.id}',this.value)">
+        <option value="pendiente" ${c.estado==='pendiente'?'selected':''}>Pendiente</option>
+        <option value="aceptada" ${c.estado==='aceptada'?'selected':''}>Aceptada</option>
+        <option value="rechazada" ${c.estado==='rechazada'?'selected':''}>Rechazada</option>
+        <option value="entregada" ${c.estado==='entregada'?'selected':''}>Entregada</option>
+      </select>
+      <button class="time-del" onclick="delCotizacion('${c.id}')">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function cambiarEstadoCot(id,estado){
+  const c=(D.cotizaciones||[]).find(x=>x.id===id);
+  if(c){c.estado=estado;save();renderCotHistorial()}
+}
+function delCotizacion(id){
+  if(!confirm('¿Eliminar cotización?'))return;
+  D.cotizaciones=(D.cotizaciones||[]).filter(c=>c.id!==id);
+  save();renderCotHistorial();
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CAJA
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+const CATEGORIAS={
+  egreso:['Materia prima','Feria','Publicidad','Transporte','Empaque','Herramientas','Servicios','Impuestos y comisiones','Otro'],
+  ingreso:['Anticipo cotización','Venta feria','Colaboración','Otro'],
+  retiro:['Retiro personal']
+};
+
+function actualizarCategorias(){
+  const tipo=document.getElementById('mTipo').value;
+  const sel=document.getElementById('mCategoria');
+  sel.innerHTML=CATEGORIAS[tipo].map(c=>`<option value="${c}">${c}</option>`).join('');
+}
+
+function registrarMovimiento(){
+  const tipo=document.getElementById('mTipo').value;
+  const categoria=document.getElementById('mCategoria').value;
+  const monto=parseFloat(document.getElementById('mMonto').value);
+  const desc=document.getElementById('mDesc').value.trim();
+  const fecha=document.getElementById('mFecha').value||today();
+  if(!monto||monto<=0){document.getElementById('mFb').textContent='El monto debe ser mayor a cero';return}
+  D.movimientos_caja=D.movimientos_caja||[];
+  D.movimientos_caja.push({id:uid(),fecha,tipo,categoria,monto,desc});save();
+  document.getElementById('mFb').textContent=`Registrado: ${categoria} · ${fmt(monto)}`;
+  setTimeout(()=>document.getElementById('mFb').textContent='',3000);
+  document.getElementById('mMonto').value='';
+  document.getElementById('mDesc').value='';
+  renderCaja();
+}
+
+function delMovimiento(id){
+  D.movimientos_caja=(D.movimientos_caja||[]).filter(m=>m.id!==id);save();renderCaja();
+}
+
+function calcularCaja(){
+  const vMes=ventasMes();
+  const ingresosVentas=vMes.reduce((s,v)=>s+v.precio,0);
+  const movs=(D.movimientos_caja||[]).filter(m=>inMonth(m.fecha,todayMonth()));
+  const ingresosExtras=movs.filter(m=>m.tipo==='ingreso').reduce((s,m)=>s+m.monto,0);
+  const egresos=movs.filter(m=>m.tipo==='egreso').reduce((s,m)=>s+m.monto,0);
+  const retiros=movs.filter(m=>m.tipo==='retiro').reduce((s,m)=>s+m.monto,0);
+  const ingresos=ingresosVentas+ingresosExtras;
+  const utilidad=ingresos-egresos;
+  return{ingresosVentas,ingresosExtras,ingresos,egresos,retiros,utilidad};
+}
+
+function renderCajaSummary(){
+  const c=calcularCaja();
+  document.getElementById('cajaSummary').innerHTML=`
+    <div class="caja-cell ingresos">
+      <div class="kpi-label">Ingresos</div>
+      <div class="kpi-value green">${fmt(c.ingresos)}</div>
+      <div class="kpi-sub">Ventas ${fmt(c.ingresosVentas)}${c.ingresosExtras>0?` + otros ${fmt(c.ingresosExtras)}`:''}</div>
+    </div>
+    <div class="caja-cell egresos">
+      <div class="kpi-label">Egresos operativos</div>
+      <div class="kpi-value" style="color:var(--red)">${fmt(c.egresos)}</div>
+      <div class="kpi-sub">gastos del negocio</div>
+    </div>
+    <div class="caja-cell">
+      <div class="kpi-label">Retiros personales</div>
+      <div class="kpi-value gold">${fmt(c.retiros)}</div>
+      <div class="kpi-sub">no cuentan como gasto</div>
+    </div>
+    <div class="caja-cell utilidad">
+      <div class="kpi-label">Utilidad del mes</div>
+      <div class="kpi-value" style="color:${c.utilidad>=0?'var(--dorado-claro)':'#F5C1C1'}">${fmt(c.utilidad)}</div>
+      <div class="kpi-sub">${c.utilidad>=0?'lo que Beyond ganó real':'estás gastando más que ingresando'}</div>
+    </div>
+  `;
+}
+
+function renderEgresosPorCategoria(){
+  const movs=(D.movimientos_caja||[]).filter(m=>inMonth(m.fecha,todayMonth())&&m.tipo==='egreso');
+  const agg={};
+  movs.forEach(m=>{
+    agg[m.categoria]=(agg[m.categoria]||0)+m.monto;
+  });
+  const ranked=Object.entries(agg).sort((a,b)=>b[1]-a[1]);
+  const el=document.getElementById('egresosPorCategoria');
+  if(!ranked.length){el.innerHTML='<div class="empty">Sin gastos registrados este mes</div>';return}
+  const max=ranked[0][1];
+  const total=ranked.reduce((s,r)=>s+r[1],0);
+  el.innerHTML=ranked.map(([cat,monto],i)=>{
+    const pct=(monto/total)*100;
+    return`<div class="rank-row">
+      <div class="rank-num">${String(i+1).padStart(2,'0')}</div>
+      <div style="flex:1;min-width:0">
+        <div class="rank-name">${cat}</div>
+        <div class="rank-sub">${Math.round(pct)}% de los egresos</div>
+      </div>
+      <div class="rank-bar"><div class="rank-bar-fill" style="width:${(monto/max)*100}%;background:var(--red)"></div></div>
+      <div class="rank-stat">${fmt(monto)}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderMovimientos(container,limit){
+  const movs=[...(D.movimientos_caja||[])].sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  const list=limit?movs.slice(0,limit):movs.filter(m=>inMonth(m.fecha,todayMonth()));
+  const el=document.getElementById(container);
+  if(!list.length){el.innerHTML='<div class="empty">Sin movimientos</div>';return}
+  el.innerHTML=list.map(m=>{
+    const d=new Date(m.fecha+'T12:00:00');
+    const signo=m.tipo==='egreso'?'-':m.tipo==='retiro'?'−':'+';
+    const cls=m.tipo==='egreso'?'out':m.tipo==='retiro'?'self':'in';
+    return`<div class="mov-row">
+      <div class="mov-date">${d.getDate()} ${MESES_COR[d.getMonth()]}</div>
+      <div class="mov-desc">
+        <div>${m.desc||m.categoria}</div>
+        <span class="cat">${m.categoria}</span>
+      </div>
+      <div class="mov-amt ${cls}">${signo}${fmt(m.monto)}</div>
+      <button class="time-del" onclick="delMovimiento('${m.id}')">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function renderCaja(){
+  renderCajaSummary();
+  renderEgresosPorCategoria();
+  renderMovimientos('ultimosMovimientos',5);
+  renderMovimientos('cajaHistorialCompleto',null);
+  if(!document.getElementById('mFecha').value)document.getElementById('mFecha').value=today();
+  actualizarCategorias();
+}
+
+
+function renderAll(){
+  renderHeader();
+  renderKpis();
+  renderRankingDisenos();
+  renderMix();
+  renderRankingColecciones();
+  renderUltimasVentas();
+  llenarSelectDisenos();
+  llenarFiltroColecciones();
+  renderHistorial();
+  renderCatalogoDisenos();
+  renderInsumos();
+  renderMateriales();
+  calcularCotizacion();
+  renderCotHistorial();
+  renderCaja();
+  if(!document.getElementById('vFecha').value)document.getElementById('vFecha').value=today();
+}
+
+/* ACTIONS */
+function registrarVenta(){
+  const producto=document.getElementById('vProducto').value;
+  const diseno=document.getElementById('vDiseno').value;
+  const talla=document.getElementById('vTalla').value;
+  const color=document.getElementById('vColor').value;
+  const precio=parseFloat(document.getElementById('vPrecio').value);
+  const plataforma=document.getElementById('vPlataforma').value;
+  const cliente=document.getElementById('vCliente').value.trim();
+  const fecha=document.getElementById('vFecha').value||today();
+  if(!diseno||!precio){document.getElementById('vFb').textContent='Completa el diseño y el precio';return}
+  D.ventas.push({id:uid(),fecha,producto,diseno,talla,color,precio,plataforma,cliente});save();
+  const dis=getDiseno(diseno);
+  document.getElementById('vFb').textContent=`Registrado: ${dis?.nombre} · ${fmt(precio)}`;
+  setTimeout(()=>document.getElementById('vFb').textContent='',3000);
+  document.getElementById('vCliente').value='';
+  document.getElementById('vTalla').value='';
+  document.getElementById('vColor').value='';
+  renderAll();
+}
+function delVenta(id){D.ventas=D.ventas.filter(v=>v.id!==id);save();renderAll()}
+
+function registrarCompra(){
+  const ing=document.getElementById('cIng').value;
+  const cantidad=parseFloat(document.getElementById('cCant').value);
+  const costoTotal=parseFloat(document.getElementById('cCosto').value);
+  const fecha=document.getElementById('cFecha').value||today();
+  if(!cantidad||!costoTotal){document.getElementById('cFb').textContent='Completa cantidad y costo total';return}
+  D.compras.push({id:uid(),ing,cantidad,costoTotal,fecha});
+  const i=getInsumo(ing);
+  if(i)i.costoUnit=costoTotal/cantidad;
+  save();
+  document.getElementById('cFb').textContent=`Compra registrada · costo unitario actualizado a ${fmt(costoTotal/cantidad)}`;
+  setTimeout(()=>document.getElementById('cFb').textContent='',3500);
+  document.getElementById('cCant').value='';
+  document.getElementById('cCosto').value='';
+  renderAll();
+}
+
+/* MODAL DISEÑO */
+function abrirModalDiseno(){
+  document.getElementById('mdColeccion').innerHTML=D.colecciones.filter(c=>c.estado==='activa').map(c=>`<option value="${c.id}">${c.nombre}</option>`).join('');
+  document.getElementById('mdNombre').value='';
+  document.getElementById('mdPrecio').value='';
+  document.getElementById('modalDiseno').classList.add('on');
+}
+function cerrarModalDiseno(){document.getElementById('modalDiseno').classList.remove('on')}
+function guardarNuevoDiseno(){
+  const nombre=document.getElementById('mdNombre').value.trim();
+  const coleccion=document.getElementById('mdColeccion').value;
+  const tipo=document.getElementById('mdTipo').value;
+  const precio=parseFloat(document.getElementById('mdPrecio').value);
+  if(!nombre||!precio)return;
+  D.disenos.push({id:uid(),nombre,coleccion,tipo,precio});save();
+  cerrarModalDiseno();
+  renderAll();
+}
+
+/* NAV */
+document.querySelectorAll('.nav button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('on'));
+    btn.classList.add('on');
+    const tab=btn.dataset.tab;
+    document.querySelectorAll('[data-pane]').forEach(p=>p.style.display=p.dataset.pane===tab?'':'none');
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+});
+
+renderAll();
+</script>
+</body>
+</html>
