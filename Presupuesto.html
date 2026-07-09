@@ -18,10 +18,36 @@
   --serif:'EB Garamond',Georgia,serif;
   --sans:'Outfit',-apple-system,sans-serif;
 }
+[data-theme="dark"]{
+  --crema:#0F0E0C; --crema-soft:#1A1614; --crema-deep:#23201C;
+  --tinta:#F3E2BE; --tinta-soft:#E4D9BE;
+  --muted:#8C857A; --line:rgba(200,164,90,0.15); --line-soft:rgba(200,164,90,0.08);
+  --paper:#1A1614; --verde-tenue:rgba(15,110,86,0.2); --red-tenue:rgba(163,45,45,0.15);
+  --dorado-tenue:rgba(200,164,90,0.15);
+  --verde-oscuro:#3E9179; --dorado-oscuro:#D9BC7E; --red:#E88686;
+}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{background:var(--crema);color:var(--tinta);font-family:var(--sans);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+html,body{background:var(--crema);color:var(--tinta);font-family:var(--sans);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;transition:background-color 0.3s,color 0.3s}
 body{min-height:100vh}
 .shell{max-width:1180px;margin:0 auto;padding:38px 30px 100px}
+
+/* LOADING */
+.loading{position:fixed;inset:0;background:var(--crema);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;z-index:1000}
+.loading-text{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--muted)}
+.loading-mark{width:60px;height:60px;border:2px solid var(--line);border-top-color:var(--verde-oscuro);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* HEADER ACTIONS */
+.head-actions{display:flex;gap:10px;align-items:center;margin-top:12px}
+.head-btn{background:transparent;border:1px solid var(--line);color:var(--tinta);width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.15s}
+.head-btn:hover{background:var(--tinta);color:var(--crema);border-color:var(--tinta)}
+.head-btn svg{width:14px;height:14px}
+.head-btn .icon-sun{display:none}
+.head-btn .icon-moon{display:block}
+[data-theme="dark"] .head-btn .icon-sun{display:block}
+[data-theme="dark"] .head-btn .icon-moon{display:none}
+.head-btn.text{width:auto;padding:0 14px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;font-family:var(--sans);font-weight:500}
+
 
 /* HEADER */
 .head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid var(--tinta);padding-bottom:20px;margin-bottom:32px;flex-wrap:wrap;gap:14px}
@@ -199,7 +225,7 @@ label{font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--
 .meta-badge.completa{background:var(--verde-tenue);color:var(--verde-oscuro)}
 
 .meta-add{background:var(--crema-soft);border:1px dashed var(--line);padding:20px;margin-bottom:20px}
-.meta-add-grid{display:grid;grid-template-columns:60px 2fr 1fr auto;gap:10px;align-items:end}
+.meta-add-grid{display:grid;grid-template-columns:2fr 1fr auto;gap:10px;align-items:end}
 
 /* EMPTY */
 .empty{text-align:center;padding:32px 20px;color:var(--muted);font-family:var(--serif);font-style:italic;font-size:15px}
@@ -236,7 +262,12 @@ label{font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--
 </style>
 </head>
 <body>
-<div class="shell">
+<div class="loading" id="loading">
+  <div class="loading-mark"></div>
+  <div class="loading-text">Cargando tus finanzas...</div>
+</div>
+
+<div class="shell" id="app" style="display:none">
 
 <!-- HEADER -->
 <div class="head">
@@ -248,7 +279,18 @@ label{font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--
   <div class="head-r">
     <div class="date" id="fechaCorta">—</div>
     <div class="today" id="fechaLarga">—</div>
-    <div class="ver">Construido con Yovel</div>
+    <div class="head-actions">
+      <button class="head-btn" onclick="toggleTheme()" title="Cambiar modo claro/oscuro">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <circle cx="12" cy="12" r="4"/>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+        </svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+      <button class="head-btn text" onclick="volverAlPortal()">Portal</button>
+    </div>
   </div>
 </div>
 
@@ -380,7 +422,6 @@ label{font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--
   <div class="meta-add">
     <div class="deuda-add-title">Nueva <em>meta</em></div>
     <div class="meta-add-grid">
-      <input type="text" id="metaEmoji" placeholder="🎯" maxlength="2" style="text-align:center;font-size:20px"/>
       <input type="text" id="metaNombre" placeholder="Nombre de la meta"/>
       <input type="number" id="metaObjetivo" placeholder="Objetivo $"/>
       <button class="btn" onclick="agregarMeta()">+ Agregar</button>
@@ -431,26 +472,35 @@ label{font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+/* ═══════════════════════════════════════════════════════════════
+   ⚠️ REEMPLAZA ESTAS DOS LÍNEAS CON TUS CREDENCIALES DE SUPABASE
+   Igual que hiciste con el portal.
+   ═══════════════════════════════════════════════════════════════ */
+const SUPABASE_URL = 'PEGA_AQUI_TU_PROJECT_URL';
+const SUPABASE_KEY = 'PEGA_AQUI_TU_PUBLISHABLE_KEY';
+/* ═══════════════════════════════════════════════════════════════ */
+
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
 const MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 const MESES_COR=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
 const DIAS=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
-const STORE_KEY='paola_finanzas_v1';
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).substr(2,4);
 const fmt=n=>'$'+Math.round(n||0).toLocaleString('es-CO');
 const today=()=>new Date().toISOString().split('T')[0];
 
 let CY=new Date().getFullYear();
 let CM=new Date().getMonth();
+let USER_ID=null;
+let D=null;
 
 function currentYM(){return `${CY}-${String(CM+1).padStart(2,'0')}`}
 function inCurrentMonth(dateStr){return dateStr.startsWith(currentYM())}
 
-/* SEED — datos reales del Excel de Paola */
-function seed(){
-  const y=new Date().getFullYear();
-  const m=String(new Date().getMonth()+1).padStart(2,'0');
-  const d=(day)=>`${y}-${m}-${String(day).padStart(2,'0')}`;
+/* CATEGORÍAS POR DEFECTO — se usan la primera vez que un cliente entra */
+function defaultConfig(){
   return {
     ingresoCategorias:['Salario Principal','Ingresos Emprendimiento','Regalos/Bonos','Intereses'],
     gastoFijoCategorias:[
@@ -474,41 +524,108 @@ function seed(){
       {nombre:'Salud',plan:120000},
       {nombre:'Educación / Cursos',plan:0},
       {nombre:'Donaciones / Diezmos',plan:165000}
-    ],
-    movimientos:[
-      {id:uid(),fecha:d(1),tipo:'ingreso',categoria:'Salario Principal',desc:'1er Quincena',monto:825000,forma:'Transferencia'},
-      {id:uid(),fecha:d(2),tipo:'gasto',categoria:'Donaciones / Diezmos',desc:'Diezmo',monto:82500,forma:'Transferencia'},
-      {id:uid(),fecha:d(3),tipo:'gasto',categoria:'Alimentación (Mercado)',desc:'Mercado mensual',monto:187000,forma:'Débito'},
-      {id:uid(),fecha:d(5),tipo:'gasto',categoria:'Servicios Públicos',desc:'Gas + luz',monto:145000,forma:'Débito'},
-      {id:uid(),fecha:d(6),tipo:'gasto',categoria:'Restaurantes/Salidas',desc:'Helados Dora',monto:14500,forma:'Nequi'},
-      {id:uid(),fecha:d(8),tipo:'gasto',categoria:'Perris/Mascotas',desc:'Desparasitante Mora',monto:45000,forma:'Transferencia'},
-      {id:uid(),fecha:d(10),tipo:'ahorro',categoria:'Fondo de emergencias',desc:'Aporte quincenal',monto:100000,forma:'Transferencia'},
-      {id:uid(),fecha:d(12),tipo:'gasto',categoria:'Transporte Diario',desc:'Uber a la oficina',monto:22000,forma:'Nequi'},
-      {id:uid(),fecha:d(14),tipo:'deuda',categoria:'Deuda',desc:'Celular Addi',monto:196756,forma:'Débito'},
-      {id:uid(),fecha:d(15),tipo:'ingreso',categoria:'Salario Principal',desc:'2da Quincena',monto:825000,forma:'Transferencia'},
-      {id:uid(),fecha:d(16),tipo:'gasto',categoria:'Salud',desc:'Consulta médica',monto:59900,forma:'Transferencia'},
-      {id:uid(),fecha:d(18),tipo:'gasto',categoria:'Cuidado Personal',desc:'Peluquería',monto:35000,forma:'Efectivo'},
-      {id:uid(),fecha:d(20),tipo:'gasto',categoria:'Entretenimiento / Ocio',desc:'Cine con mamá',monto:38000,forma:'Débito'},
-      {id:uid(),fecha:d(22),tipo:'ahorro',categoria:'Matrimonio',desc:'Aporte al fondo',monto:150000,forma:'Transferencia'}
-    ],
-    deudas:[
-      {id:'deuda_addi',nombre:'Celular Addi',capital:2999929,tasa:4,plazo:24,cuota:196756,notas:'Compra celular junio 2025'}
-    ],
-    metas:[
-      {id:'meta_emergencias',nombre:'Fondo de emergencias',emoji:'🚨',objetivo:3000000},
-      {id:'meta_matrimonio',nombre:'Matrimonio',emoji:'💍',objetivo:10000000},
-      {id:'meta_viaje',nombre:'Viaje / vacaciones',emoji:'✈️',objetivo:2000000}
     ]
   };
 }
 
-/* STORAGE */
-function load(){
-  try{const raw=localStorage.getItem(STORE_KEY);if(!raw)return seed();return JSON.parse(raw)}
-  catch(e){return seed()}
+/* ═══════════════════════════════════════════════════════════════
+   AUTENTICACIÓN
+   ═══════════════════════════════════════════════════════════════ */
+async function checkAuth(){
+  const {data:{session}} = await sb.auth.getSession();
+  if(!session){
+    window.location.href = 'yovel_portal_v3.html';
+    return false;
+  }
+  USER_ID = session.user.id;
+  return true;
 }
-function save(){try{localStorage.setItem(STORE_KEY,JSON.stringify(D))}catch(e){}}
-let D=load();
+
+async function volverAlPortal(){
+  window.location.href = 'yovel_portal_v3.html';
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MODO CLARO / OSCURO
+   ═══════════════════════════════════════════════════════════════ */
+function initTheme(){
+  const saved = localStorage.getItem('yovel-theme');
+  if(saved === 'dark') document.documentElement.setAttribute('data-theme','dark');
+  else if(!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches){
+    document.documentElement.setAttribute('data-theme','dark');
+  }
+}
+function toggleTheme(){
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  if(isDark){
+    document.documentElement.removeAttribute('data-theme');
+    localStorage.setItem('yovel-theme','light');
+  } else {
+    document.documentElement.setAttribute('data-theme','dark');
+    localStorage.setItem('yovel-theme','dark');
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CARGA DE DATOS DESDE SUPABASE
+   ═══════════════════════════════════════════════════════════════ */
+async function cargarTodo(){
+  const [trans, ent, cfg] = await Promise.all([
+    sb.from('transacciones').select('*').order('fecha',{ascending:false}),
+    sb.from('entidades').select('*'),
+    sb.from('configuracion').select('*')
+  ]);
+
+  const movimientos = (trans.data||[]).map(t=>({
+    id:t.id,
+    fecha:t.fecha,
+    tipo:t.tipo,
+    categoria:t.categoria||'',
+    desc:t.descripcion||'',
+    monto:parseFloat(t.monto),
+    forma:(t.metadata&&t.metadata.forma)||''
+  }));
+
+  const entidades = ent.data||[];
+  const deudas = entidades.filter(e=>e.tipo==='deuda').map(e=>({
+    id:e.id,
+    nombre:e.nombre,
+    capital:(e.metadata&&e.metadata.capital)||0,
+    tasa:(e.metadata&&e.metadata.tasa)||0,
+    plazo:(e.metadata&&e.metadata.plazo)||12,
+    cuota:(e.metadata&&e.metadata.cuota)||0,
+    notas:(e.metadata&&e.metadata.notas)||''
+  }));
+
+  const metas = entidades.filter(e=>e.tipo==='meta_ahorro').map(e=>({
+    id:e.id,
+    nombre:e.nombre,
+    objetivo:(e.metadata&&e.metadata.objetivo)||0
+  }));
+
+  const cfgMap = {};
+  (cfg.data||[]).forEach(c=>cfgMap[c.key]=c.value);
+
+  const defs = defaultConfig();
+
+  return {
+    movimientos,
+    deudas,
+    metas,
+    ingresoCategorias: cfgMap.ingreso_categorias || defs.ingresoCategorias,
+    gastoFijoCategorias: cfgMap.gasto_fijo_categorias || defs.gastoFijoCategorias,
+    gastoVariableCategorias: cfgMap.gasto_variable_categorias || defs.gastoVariableCategorias
+  };
+}
+
+/* Guardar una configuración clave-valor (upsert) */
+async function guardarConfig(key, value){
+  await sb.from('configuracion').upsert({
+    cliente_id: USER_ID,
+    key,
+    value
+  }, {onConflict:'cliente_id,key'});
+}
 
 /* HELPERS */
 function movsMes(){return D.movimientos.filter(m=>inCurrentMonth(m.fecha))}
@@ -726,7 +843,7 @@ function actualizarCategoriasMov(){
   sel.innerHTML=opciones.map(o=>`<option value="${o}">${o}</option>`).join('');
 }
 
-function registrarMovimiento(){
+async function registrarMovimiento(){
   const tipo=document.getElementById('mTipo').value;
   const categoria=document.getElementById('mCategoria').value;
   const monto=parseFloat(document.getElementById('mMonto').value);
@@ -734,11 +851,32 @@ function registrarMovimiento(){
   const forma=document.getElementById('mForma').value;
   const fecha=document.getElementById('mFecha').value||today();
   if(!monto||monto<=0){document.getElementById('mFb').textContent='El monto debe ser mayor a cero';return}
-  // Para ahorros y deuda, la descripción debe ser el nombre de la meta/deuda
   let descFinal=desc;
   if(tipo==='ahorro'&&!desc){descFinal=categoria}
   if(tipo==='deuda'&&!desc){document.getElementById('mFb').textContent='Escribe el nombre exacto de la deuda como descripción';return}
-  D.movimientos.push({id:uid(),fecha,tipo,categoria,desc:descFinal,monto,forma});save();
+
+  const {data,error} = await sb.from('transacciones').insert({
+    cliente_id:USER_ID,
+    fecha,
+    tipo,
+    categoria,
+    descripcion:descFinal,
+    monto,
+    metadata:{forma}
+  }).select().single();
+
+  if(error){document.getElementById('mFb').textContent='Error: '+error.message;return}
+
+  D.movimientos.unshift({
+    id:data.id,
+    fecha:data.fecha,
+    tipo:data.tipo,
+    categoria:data.categoria,
+    desc:data.descripcion,
+    monto:parseFloat(data.monto),
+    forma:(data.metadata&&data.metadata.forma)||''
+  });
+
   document.getElementById('mFb').textContent=`Registrado: ${fmt(monto)} · ${categoria}`;
   setTimeout(()=>document.getElementById('mFb').textContent='',3000);
   document.getElementById('mMonto').value='';
@@ -747,7 +885,13 @@ function registrarMovimiento(){
   renderAll();
 }
 
-function delMovimiento(id){D.movimientos=D.movimientos.filter(m=>m.id!==id);save();renderAll()}
+async function delMovimiento(id){
+  const {error} = await sb.from('transacciones').delete().eq('id',id);
+  if(!error){
+    D.movimientos=D.movimientos.filter(m=>m.id!==id);
+    renderAll();
+  }
+}
 
 function renderHistorial(){
   const filtro=document.getElementById('fTipo').value;
@@ -760,7 +904,7 @@ function renderHistorial(){
 }
 
 /* DEUDAS */
-function agregarDeuda(){
+async function agregarDeuda(){
   const nombre=document.getElementById('dNombre').value.trim();
   const capital=parseFloat(document.getElementById('dCapital').value);
   const tasa=parseFloat(document.getElementById('dTasa').value)||0;
@@ -768,26 +912,62 @@ function agregarDeuda(){
   if(!nombre||!capital){document.getElementById('dFb').textContent='Completa el nombre y el capital';return}
   const totalCredito=capital+(capital*(tasa/100)*plazo);
   const cuota=Math.round(totalCredito/plazo);
-  D.deudas.push({id:uid(),nombre,capital,tasa,plazo,cuota,notas:''});save();
+
+  const {data,error} = await sb.from('entidades').insert({
+    cliente_id:USER_ID,
+    tipo:'deuda',
+    nombre,
+    estado:'activa',
+    metadata:{capital,tasa,plazo,cuota,notas:''}
+  }).select().single();
+
+  if(error){document.getElementById('dFb').textContent='Error: '+error.message;return}
+
+  D.deudas.push({id:data.id,nombre,capital,tasa,plazo,cuota,notas:''});
   document.getElementById('dFb').textContent=`Deuda agregada · cuota estimada ${fmt(cuota)}`;
   setTimeout(()=>document.getElementById('dFb').textContent='',3500);
   ['dNombre','dCapital','dTasa','dPlazo'].forEach(id=>document.getElementById(id).value='');
   renderDeudas();
 }
 
-function delDeuda(id){
+async function delDeuda(id){
   if(!confirm('¿Eliminar esta deuda? Los pagos registrados no se borrarán.'))return;
-  D.deudas=D.deudas.filter(d=>d.id!==id);save();renderDeudas();renderAll();
+  const {error} = await sb.from('entidades').delete().eq('id',id);
+  if(!error){
+    D.deudas=D.deudas.filter(d=>d.id!==id);
+    renderDeudas();renderAll();
+  }
 }
 
-function abonarDeuda(id){
+async function abonarDeuda(id){
   const deuda=D.deudas.find(x=>x.id===id);
   if(!deuda)return;
   const m=parseFloat(document.getElementById('ab-'+id).value);
   const desc=document.getElementById('ab-desc-'+id).value.trim()||'Cuota';
   if(!m||m<=0)return;
-  D.movimientos.push({id:uid(),fecha:today(),tipo:'deuda',categoria:'Deuda',desc:deuda.nombre,monto:m,forma:'Transferencia'});save();
-  renderAll();
+
+  const {data,error} = await sb.from('transacciones').insert({
+    cliente_id:USER_ID,
+    fecha:today(),
+    tipo:'deuda',
+    categoria:'Deuda',
+    descripcion:deuda.nombre,
+    monto:m,
+    metadata:{forma:'Transferencia'}
+  }).select().single();
+
+  if(!error){
+    D.movimientos.unshift({
+      id:data.id,
+      fecha:data.fecha,
+      tipo:data.tipo,
+      categoria:data.categoria,
+      desc:data.descripcion,
+      monto:parseFloat(data.monto),
+      forma:'Transferencia'
+    });
+    renderAll();
+  }
 }
 
 function renderDeudas(){
@@ -837,30 +1017,65 @@ function renderDeudas(){
 }
 
 /* AHORROS */
-function agregarMeta(){
+async function agregarMeta(){
   const nombre=document.getElementById('metaNombre').value.trim();
-  const emoji=document.getElementById('metaEmoji').value.trim()||'🎯';
   const objetivo=parseFloat(document.getElementById('metaObjetivo').value);
   if(!nombre||!objetivo){document.getElementById('metaFb').textContent='Completa el nombre y el objetivo';return}
-  D.metas.push({id:uid(),nombre,emoji,objetivo});save();
+
+  const {data,error} = await sb.from('entidades').insert({
+    cliente_id:USER_ID,
+    tipo:'meta_ahorro',
+    nombre,
+    estado:'activa',
+    metadata:{objetivo}
+  }).select().single();
+
+  if(error){document.getElementById('metaFb').textContent='Error: '+error.message;return}
+
+  D.metas.push({id:data.id,nombre,objetivo});
   document.getElementById('metaFb').textContent=`Meta agregada: ${nombre}`;
   setTimeout(()=>document.getElementById('metaFb').textContent='',3000);
-  ['metaNombre','metaEmoji','metaObjetivo'].forEach(id=>document.getElementById(id).value='');
+  ['metaNombre','metaObjetivo'].forEach(id=>document.getElementById(id).value='');
   renderMetas();
 }
 
-function delMeta(id){
+async function delMeta(id){
   if(!confirm('¿Eliminar esta meta? Los ahorros registrados no se borrarán.'))return;
-  D.metas=D.metas.filter(m=>m.id!==id);save();renderMetas();renderAll();
+  const {error} = await sb.from('entidades').delete().eq('id',id);
+  if(!error){
+    D.metas=D.metas.filter(m=>m.id!==id);
+    renderMetas();renderAll();
+  }
 }
 
-function aportarMeta(id){
+async function aportarMeta(id){
   const meta=D.metas.find(x=>x.id===id);
   if(!meta)return;
   const monto=parseFloat(document.getElementById('mt-'+id).value);
   if(!monto||monto<=0)return;
-  D.movimientos.push({id:uid(),fecha:today(),tipo:'ahorro',categoria:meta.nombre,desc:meta.nombre,monto,forma:'Transferencia'});save();
-  renderAll();
+
+  const {data,error} = await sb.from('transacciones').insert({
+    cliente_id:USER_ID,
+    fecha:today(),
+    tipo:'ahorro',
+    categoria:meta.nombre,
+    descripcion:meta.nombre,
+    monto,
+    metadata:{forma:'Transferencia'}
+  }).select().single();
+
+  if(!error){
+    D.movimientos.unshift({
+      id:data.id,
+      fecha:data.fecha,
+      tipo:data.tipo,
+      categoria:data.categoria,
+      desc:data.descripcion,
+      monto:parseFloat(data.monto),
+      forma:'Transferencia'
+    });
+    renderAll();
+  }
 }
 
 function renderMetas(){
@@ -935,13 +1150,18 @@ function abrirModalCategoria(){
   document.getElementById('modalCategoria').classList.add('on');
 }
 
-function guardarPresupuesto(input){
+async function guardarPresupuesto(input){
   const cat=input.dataset.cat;
   const tipo=input.dataset.tipo;
   const nuevo=parseFloat(input.value)||0;
   const lista=tipo==='fijo'?D.gastoFijoCategorias:D.gastoVariableCategorias;
   const c=lista.find(x=>x.nombre===cat);
-  if(c){c.plan=nuevo;save();renderPlan();renderResumenGastos()}
+  if(c){
+    c.plan=nuevo;
+    const key = tipo==='fijo' ? 'gasto_fijo_categorias' : 'gasto_variable_categorias';
+    await guardarConfig(key, lista);
+    renderPlan();renderResumenGastos();
+  }
 }
 
 function cerrarModalCategoria(){document.getElementById('modalCategoria').classList.remove('on');renderAll()}
@@ -974,7 +1194,29 @@ document.querySelectorAll('.nav button').forEach(btn=>{
   });
 });
 
-renderAll();
+async function init(){
+  initTheme();
+
+  if(SUPABASE_URL.includes('PEGA_AQUI')||SUPABASE_KEY.includes('PEGA_AQUI')){
+    document.getElementById('loading').innerHTML='<div style="max-width:500px;text-align:center;padding:0 30px;font-family:Georgia,serif;color:#9F7E3F"><div style="font-size:22px;font-style:italic;margin-bottom:16px">Falta configurar las credenciales</div><div style="font-size:14px;color:#8C857A;line-height:1.6">Abre este archivo en un editor y reemplaza <code style="background:#F3E2BE;padding:2px 6px">SUPABASE_URL</code> y <code style="background:#F3E2BE;padding:2px 6px">SUPABASE_KEY</code> con las mismas del portal.</div></div>';
+    return;
+  }
+
+  const ok = await checkAuth();
+  if(!ok) return;
+
+  try{
+    D = await cargarTodo();
+    document.getElementById('loading').style.display='none';
+    document.getElementById('app').style.display='';
+    renderAll();
+  }catch(e){
+    console.error(e);
+    document.getElementById('loading').innerHTML='<div style="text-align:center;max-width:400px;padding:0 30px;font-family:Georgia,serif;color:#A32D2D"><div style="font-size:20px;font-style:italic;margin-bottom:12px">No pudimos cargar tus datos</div><div style="color:#8C857A;font-size:14px">Recarga la página o vuelve al <a href="yovel_portal_v3.html" style="color:#0F6E56">portal</a>.</div></div>';
+  }
+}
+
+init();
 </script>
 </body>
 </html>
