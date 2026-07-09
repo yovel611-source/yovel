@@ -21,9 +21,9 @@
 [data-theme="dark"]{
   --crema:#0F0E0C; --crema-soft:#1A1614; --crema-deep:#23201C;
   --tinta:#F3E2BE; --tinta-soft:#E4D9BE;
-  --muted:#8C857A; --line:rgba(200,164,90,0.15); --line-soft:rgba(200,164,90,0.08);
-  --paper:#1A1614; --verde-tenue:rgba(15,110,86,0.2); --red-tenue:rgba(163,45,45,0.15);
-  --dorado-tenue:rgba(200,164,90,0.15);
+  --muted:#9F9689; --line:rgba(200,164,90,0.28); --line-soft:rgba(200,164,90,0.16);
+  --paper:#1A1614; --verde-tenue:rgba(15,110,86,0.25); --red-tenue:rgba(163,45,45,0.18);
+  --dorado-tenue:rgba(200,164,90,0.18);
   --verde-oscuro:#3E9179; --dorado-oscuro:#D9BC7E; --red:#E88686;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -106,7 +106,8 @@ body{min-height:100vh}
 .section-title em{font-style:italic;color:var(--verde-oscuro)}
 
 /* CARD */
-.card{background:var(--paper);border:1px solid var(--line);padding:24px;margin-bottom:20px}
+.card{background:var(--paper);border:1px solid var(--line);padding:24px;margin-bottom:20px;box-shadow:0 1px 2px rgba(0,0,0,0.03)}
+[data-theme="dark"] .card{box-shadow:none;border-color:rgba(200,164,90,0.25)}
 .card-title{font-family:var(--serif);font-size:19px;font-weight:400;margin-bottom:18px;letter-spacing:-0.005em;display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px}
 .card-title em{font-style:italic;color:var(--verde-oscuro)}
 .card-title .meta{font-family:var(--serif);font-style:italic;color:var(--muted);font-size:13px}
@@ -150,8 +151,10 @@ body{min-height:100vh}
 .time-del:hover{opacity:1;color:var(--red)}
 
 /* FORM */
-input,select,textarea{font-family:var(--sans);font-size:14px;color:var(--tinta);background:var(--paper);border:1px solid var(--line);padding:10px 12px;outline:none;border-radius:0;flex:1;min-width:100px}
-input:focus,select:focus,textarea:focus{border-color:var(--tinta)}
+input,select,textarea{font-family:var(--sans);font-size:14px;color:var(--tinta);background:var(--paper);border:1px solid var(--line);padding:10px 12px;outline:none;border-radius:0;flex:1;min-width:100px;transition:border-color 0.15s,background 0.15s}
+input:hover,select:hover,textarea:hover{border-color:var(--muted)}
+input:focus,select:focus,textarea:focus{border-color:var(--tinta);background:var(--paper)}
+[data-theme="dark"] input,[data-theme="dark"] select,[data-theme="dark"] textarea{background:var(--crema);border-color:var(--line)}
 input[type=date]{min-width:140px;font-variant-numeric:tabular-nums}
 input[type=number]{font-variant-numeric:tabular-nums;text-align:right}
 label{font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px}
@@ -456,8 +459,23 @@ label{font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--
 <div class="modal-bg" id="modalCategoria">
   <div class="modal">
     <h3>Ajustar <em>presupuesto</em></h3>
-    <p style="font-family:var(--serif);font-style:italic;color:var(--muted);margin-bottom:20px;font-size:14px">Define cuánto proyectas gastar cada mes en cada categoría. Los avisos aparecen cuando te acercas al límite.</p>
-    <div id="modalCatList" style="max-height:400px;overflow-y:auto;padding-right:8px"></div>
+    <p style="font-family:var(--serif);font-style:italic;color:var(--muted);margin-bottom:20px;font-size:14px">Define cuánto proyectas gastar cada mes en cada categoría. Puedes agregar categorías nuevas o quitar las que no uses.</p>
+
+    <div style="margin-bottom:16px;border-bottom:1px solid var(--line);padding-bottom:16px">
+      <div style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;font-weight:500">Agregar nueva categoría</div>
+      <div style="display:grid;grid-template-columns:1.4fr 90px 1fr auto;gap:8px">
+        <input type="text" id="nuevaCatNombre" placeholder="Nombre..."/>
+        <select id="nuevaCatTipo" style="min-width:auto">
+          <option value="fijo">Fijo</option>
+          <option value="variable">Variable</option>
+        </select>
+        <input type="number" id="nuevaCatPlan" placeholder="Presupuesto $"/>
+        <button class="btn btn-sm" onclick="agregarCategoria()">+</button>
+      </div>
+      <div id="nuevaCatFb" style="font-size:12px;color:var(--verde-oscuro);font-style:italic;font-family:var(--serif);margin-top:6px;min-height:16px"></div>
+    </div>
+
+    <div id="modalCatList" style="max-height:340px;overflow-y:auto;padding-right:8px"></div>
     <div class="modal-actions">
       <button class="btn" onclick="cerrarModalCategoria()">Listo</button>
     </div>
@@ -478,8 +496,8 @@ label{font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--
    ⚠️ REEMPLAZA ESTAS DOS LÍNEAS CON TUS CREDENCIALES DE SUPABASE
    Igual que hiciste con el portal.
    ═══════════════════════════════════════════════════════════════ */
-const SUPABASE_URL = 'https://lldgufmpwozybeskbepl.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_FtztspYzQ2M1GbLKMSrZIg_kQqZExJS';
+const SUPABASE_URL = 'PEGA_AQUI_TU_PROJECT_URL';
+const SUPABASE_KEY = 'PEGA_AQUI_TU_PUBLISHABLE_KEY';
 /* ═══════════════════════════════════════════════════════════════ */
 
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -534,7 +552,7 @@ function defaultConfig(){
 async function checkAuth(){
   const {data:{session}} = await sb.auth.getSession();
   if(!session){
-    window.location.href = 'Portal.html';
+    window.location.href = 'yovel_portal_v3.html';
     return false;
   }
   USER_ID = session.user.id;
@@ -542,7 +560,7 @@ async function checkAuth(){
 }
 
 async function volverAlPortal(){
-  window.location.href = 'Portal.html';
+  window.location.href = 'yovel_portal_v3.html';
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1138,16 +1156,71 @@ function renderPlan(){
 
 function abrirModalCategoria(){
   const all=[...D.gastoFijoCategorias.map(c=>({...c,tipo:'fijo'})),...D.gastoVariableCategorias.map(c=>({...c,tipo:'variable'}))];
-  document.getElementById('modalCatList').innerHTML=all.map((c,i)=>`
+  const cont=document.getElementById('modalCatList');
+  cont.innerHTML=all.map((c,i)=>`
     <div style="display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line-soft)">
       <div style="flex:1">
-        <div style="font-size:14px;font-weight:500;color:var(--tinta)">${c.nombre}</div>
+        <div style="font-size:14px;font-weight:500;color:var(--tinta)"></div>
         <div style="font-family:var(--serif);font-style:italic;font-size:12px;color:var(--muted)">${c.tipo==='fijo'?'Gasto fijo':'Gasto variable'}</div>
       </div>
-      <input type="number" value="${c.plan}" placeholder="Presupuesto $" style="max-width:140px" data-cat="${c.nombre}" data-tipo="${c.tipo}" onchange="guardarPresupuesto(this)"/>
+      <input type="number" value="${c.plan}" placeholder="Presupuesto $" style="max-width:140px" data-cat-input="${i}"/>
+      <button class="btn btn-soft btn-sm" style="padding:6px 10px;color:var(--red);border-color:var(--line)" data-cat-del="${i}" title="Eliminar categoría">✕</button>
     </div>
   `).join('');
+  // Poner nombres de forma segura (evita problemas con caracteres especiales)
+  cont.querySelectorAll('[style*="font-weight:500"]').forEach((el,i)=>{el.textContent=all[i].nombre});
+  // Attach handlers
+  cont.querySelectorAll('[data-cat-input]').forEach(inp=>{
+    const i=parseInt(inp.dataset.catInput);
+    inp.addEventListener('change',()=>guardarPresupuestoCat(all[i].nombre,all[i].tipo,parseFloat(inp.value)||0));
+  });
+  cont.querySelectorAll('[data-cat-del]').forEach(btn=>{
+    const i=parseInt(btn.dataset.catDel);
+    btn.addEventListener('click',()=>eliminarCategoria(all[i].nombre,all[i].tipo));
+  });
   document.getElementById('modalCategoria').classList.add('on');
+}
+
+async function guardarPresupuestoCat(nombre,tipo,plan){
+  const lista=tipo==='fijo'?D.gastoFijoCategorias:D.gastoVariableCategorias;
+  const c=lista.find(x=>x.nombre===nombre);
+  if(!c)return;
+  c.plan=plan;
+  const key=tipo==='fijo'?'gasto_fijo_categorias':'gasto_variable_categorias';
+  await guardarConfig(key,lista);
+  renderPlan();renderResumenGastos();
+}
+
+async function agregarCategoria(){
+  const nombre=document.getElementById('nuevaCatNombre').value.trim();
+  const tipo=document.getElementById('nuevaCatTipo').value;
+  const plan=parseFloat(document.getElementById('nuevaCatPlan').value)||0;
+  const fb=document.getElementById('nuevaCatFb');
+  if(!nombre){fb.textContent='Escribe un nombre';fb.style.color='var(--red)';return}
+  const lista=tipo==='fijo'?D.gastoFijoCategorias:D.gastoVariableCategorias;
+  if(lista.some(c=>c.nombre.toLowerCase()===nombre.toLowerCase())){
+    fb.textContent='Ya existe una categoría con ese nombre';fb.style.color='var(--red)';return;
+  }
+  lista.push({nombre,plan});
+  const key=tipo==='fijo'?'gasto_fijo_categorias':'gasto_variable_categorias';
+  await guardarConfig(key,lista);
+  fb.textContent=`Categoría "${nombre}" agregada`;fb.style.color='var(--verde-oscuro)';
+  setTimeout(()=>fb.textContent='',2500);
+  ['nuevaCatNombre','nuevaCatPlan'].forEach(id=>document.getElementById(id).value='');
+  abrirModalCategoria();
+  renderPlan();renderResumenGastos();
+}
+
+async function eliminarCategoria(nombre,tipo){
+  if(!confirm(`¿Eliminar la categoría "${nombre}"?\n\nLos movimientos ya registrados en esa categoría no se borran, pero la categoría dejará de aparecer en el menú.`))return;
+  const lista=tipo==='fijo'?D.gastoFijoCategorias:D.gastoVariableCategorias;
+  const idx=lista.findIndex(c=>c.nombre===nombre);
+  if(idx===-1)return;
+  lista.splice(idx,1);
+  const key=tipo==='fijo'?'gasto_fijo_categorias':'gasto_variable_categorias';
+  await guardarConfig(key,lista);
+  abrirModalCategoria();
+  renderPlan();renderResumenGastos();
 }
 
 async function guardarPresupuesto(input){
@@ -1212,7 +1285,7 @@ async function init(){
     renderAll();
   }catch(e){
     console.error(e);
-    document.getElementById('loading').innerHTML='<div style="text-align:center;max-width:400px;padding:0 30px;font-family:Georgia,serif;color:#A32D2D"><div style="font-size:20px;font-style:italic;margin-bottom:12px">No pudimos cargar tus datos</div><div style="color:#8C857A;font-size:14px">Recarga la página o vuelve al <a href="Portal.html" style="color:#0F6E56">portal</a>.</div></div>';
+    document.getElementById('loading').innerHTML='<div style="text-align:center;max-width:400px;padding:0 30px;font-family:Georgia,serif;color:#A32D2D"><div style="font-size:20px;font-style:italic;margin-bottom:12px">No pudimos cargar tus datos</div><div style="color:#8C857A;font-size:14px">Recarga la página o vuelve al <a href="yovel_portal_v3.html" style="color:#0F6E56">portal</a>.</div></div>';
   }
 }
 
