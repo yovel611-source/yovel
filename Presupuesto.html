@@ -534,7 +534,7 @@ function defaultConfig(){
 async function checkAuth(){
   const {data:{session}} = await sb.auth.getSession();
   if(!session){
-    window.location.href = 'yovel_portal_v3.html';
+    window.location.href = 'Portal.html';
     return false;
   }
   USER_ID = session.user.id;
@@ -542,7 +542,7 @@ async function checkAuth(){
 }
 
 async function volverAlPortal(){
-  window.location.href = 'yovel_portal_v3.html';
+  window.location.href = 'Portal.html';
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1212,7 +1212,7 @@ async function init(){
     renderAll();
   }catch(e){
     console.error(e);
-    document.getElementById('loading').innerHTML='<div style="text-align:center;max-width:400px;padding:0 30px;font-family:Georgia,serif;color:#A32D2D"><div style="font-size:20px;font-style:italic;margin-bottom:12px">No pudimos cargar tus datos</div><div style="color:#8C857A;font-size:14px">Recarga la página o vuelve al <a href="yovel_portal_v3.html" style="color:#0F6E56">portal</a>.</div></div>';
+    document.getElementById('loading').innerHTML='<div style="text-align:center;max-width:400px;padding:0 30px;font-family:Georgia,serif;color:#A32D2D"><div style="font-size:20px;font-style:italic;margin-bottom:12px">No pudimos cargar tus datos</div><div style="color:#8C857A;font-size:14px">Recarga la página o vuelve al <a href="Portal.html" style="color:#0F6E56">portal</a>.</div></div>';
   }
 }
 
