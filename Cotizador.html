@@ -1491,7 +1491,7 @@ function renderAll(){
 /* INIT */
 async function init(){
   initTheme();
-  if(SUPABASE_URL.includes('PEGA_AQUI')||SUPABASE_KEY.includes('PEGA_AQUI')){
+  if(SUPABASE_URL.includes('https://lldgufmpwozybeskbepl.supabase.co')||SUPABASE_KEY.includes('sb_publishable_FtztspYzQ2M1GbLKMSrZIg_kQqZExJS')){
     document.getElementById('loading').innerHTML='<div style="max-width:500px;text-align:center;padding:0 30px;font-family:Georgia,serif;color:#9F7E3F"><div style="font-size:22px;font-style:italic;margin-bottom:16px">Falta configurar las credenciales</div><div style="font-size:14px;color:#8C857A;line-height:1.6">Abre este archivo en un editor y reemplaza <code style="background:#F3E2BE;padding:2px 6px">SUPABASE_URL</code> y <code style="background:#F3E2BE;padding:2px 6px">SUPABASE_KEY</code> con las del portal.</div></div>';
     return;
   }
